@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MyCompose</string>
+    <string name="expired_token">expired token</string>
+
+    <string name="tab_main">Home</string>
+    <string name="tab_case">Case</string>
+    <string name="tab_contact">Contact</string>
+    <string name="tab_me">Me</string>
+
+</resources>
