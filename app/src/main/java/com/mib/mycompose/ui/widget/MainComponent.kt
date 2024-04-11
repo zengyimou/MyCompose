@@ -1,8 +1,13 @@
 package com.mib.mycompose.ui.widget
 
+import android.annotation.SuppressLint
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,14 +24,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import com.mib.mycompose.R
+import com.mib.mycompose.ui.theme.FF999999
 import com.mib.mycompose.ui.theme.White
 
 /**
@@ -34,6 +44,7 @@ import com.mib.mycompose.ui.theme.White
  *  date : 2024/4/10 10:30
  *  description :
  */
+@Preview
 @Composable
 fun MainComponent(nav: NavHostController? = null) {
 
@@ -46,30 +57,49 @@ fun MainComponent(nav: NavHostController? = null) {
 		context.getString(R.string.tab_me)
 	)
 
-	Surface{
+	Surface(
+		modifier = Modifier.background(color = White),
+	){
 		Scaffold(
-			content = null,
 			bottomBar = {
-				BottomNavigation {
+				BottomNavigation(
+					backgroundColor = White,
+					modifier = Modifier.height(64.dp)
+				) {
 					tabItemsStr.forEachIndexed { index, item ->
 						BottomNavigationItem(
 							icon = {
-								var iconRes = R.drawable.ic_ta
-								Icon(
-									painter = painterResource(id = iconRes),
-									contentDescription = null,
-									modifier = Modifier
-										.size(24.dp)
-										.padding(bottom = 4.dp),
-								)},
-							label = { Text(item) },
+								var iconRes = R.mipmap.icon_tab_btn_case_selected
+								Box(
+									contentAlignment = Alignment.Center
+								) {
+									Image(
+										painter = painterResource(id = iconRes),
+										contentDescription = null,
+										contentScale = ContentScale.Crop
+									)
+								}
+							},
+							label = { Text(text = item, textAlign = TextAlign.Center) },
 							selected = selectItem == index,
 							onClick = { selectItem = index }
 						)
 					}
 				}
 			}
-		)
+		){ innerPadding ->
+			val modifier = Modifier.padding(innerPadding)
+			Crossfade(selectItem, label = "") { destination ->
+				when(destination) {
+					0 -> MainPage()
+					1 -> CasePage()
+					2 -> ContactPage()
+					3 -> MePage()
+					else -> MainPage()
+				}
+			}
+
+		}
 	}
 
 }
@@ -78,9 +108,8 @@ fun MainComponent(nav: NavHostController? = null) {
 fun MainPage(){
 	ConstraintLayout(
 		modifier = Modifier
-			.absolutePadding(top = 40.dp, left = 16.dp, right = 16.dp)
 			.fillMaxWidth()
-			.height(IntrinsicSize.Min)
+			.fillMaxHeight()
 			.background(White),
 	) {
 
@@ -91,10 +120,9 @@ fun MainPage(){
 fun CasePage(){
 	ConstraintLayout(
 		modifier = Modifier
-			.absolutePadding(top = 40.dp, left = 16.dp, right = 16.dp)
 			.fillMaxWidth()
-			.height(IntrinsicSize.Min)
-			.background(White),
+			.fillMaxHeight()
+			.background(FF999999),
 	) {
 
 	}
@@ -104,9 +132,8 @@ fun CasePage(){
 fun ContactPage(){
 	ConstraintLayout(
 		modifier = Modifier
-			.absolutePadding(top = 40.dp, left = 16.dp, right = 16.dp)
 			.fillMaxWidth()
-			.height(IntrinsicSize.Min)
+			.fillMaxHeight()
 			.background(White),
 	) {
 
@@ -117,10 +144,9 @@ fun ContactPage(){
 fun MePage(){
 	ConstraintLayout(
 		modifier = Modifier
-			.absolutePadding(top = 40.dp, left = 16.dp, right = 16.dp)
 			.fillMaxWidth()
-			.height(IntrinsicSize.Min)
-			.background(White),
+			.fillMaxHeight()
+			.background(FF999999),
 	) {
 
 	}

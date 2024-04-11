@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mib.mycompose.constants.Scene.LOGIN_PAGE
 import com.mib.mycompose.constants.Scene.MAIN_PAGE
+import com.mib.mycompose.manager.UserInfoManager
 import com.mib.mycompose.viewmodel.MainViewModel
 
 /**
@@ -29,7 +30,10 @@ fun DisneyMainScreen(mainViewModel: MainViewModel) {
 	var statusBarColor by remember { mutableStateOf(colors.primaryVariant) }
 	var navigationBarColor by remember { mutableStateOf(colors.primaryVariant) }
 
-	NavHost(navController = navController, startDestination = LOGIN_PAGE) {
+	//初始页面
+	val commonPage = if(!UserInfoManager.isLogin) MAIN_PAGE else LOGIN_PAGE
+
+	NavHost(navController = navController, startDestination = commonPage) {
 		composable(LOGIN_PAGE){
 			LoginContent(nav = navController, listener = mainViewModel.loginListener)
 		}

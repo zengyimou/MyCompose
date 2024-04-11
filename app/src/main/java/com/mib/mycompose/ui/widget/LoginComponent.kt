@@ -33,6 +33,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.mib.mycompose.R
+import com.mib.mycompose.constants.Scene.MAIN_PAGE
 import com.mib.mycompose.ui.theme.loginTextStyle
 import com.mib.mycompose.util.Logger
 import com.mib.mycompose.viewmodel.MainViewModel
@@ -153,7 +154,8 @@ fun LoginContent(nav: NavHostController? = null, listener: MainViewModel.LoginPa
 			Button(
 				onClick = {
 					// 处理按钮点击事件
-					listener?.login(listId = accountEditValue, password = passwordEditValue)
+//					listener?.login(listId = accountEditValue, password = passwordEditValue)
+						  nav?.navigate(MAIN_PAGE)
 				},
 				modifier = Modifier
 					.constrainAs(btnLogin) {
