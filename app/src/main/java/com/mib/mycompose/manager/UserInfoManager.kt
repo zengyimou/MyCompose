@@ -5,6 +5,7 @@ import android.text.TextUtils
 import com.mib.mycompose.model.LoginData
 import com.mib.mycompose.util.ContextHolder
 import com.mib.mycompose.util.JsonUtils
+import com.mib.mycompose.util.Logger
 import com.mib.mycompose.util.PreferencesSecurity
 import com.mib.mycompose.util.SPUtils
 
@@ -34,6 +35,8 @@ object UserInfoManager {
 	 */
 	fun init() {
 		val jsonString = PreferencesSecurity.accountInfo
+		Logger.d("MainComponent","accountInfo jsonString ${jsonString}")
+
 		if (!TextUtils.isEmpty(jsonString)) {
 			loginInfo = JsonUtils.toObject(jsonString, LoginData::class.java)
 			lastLoginListId = SPUtils.getSharedStringData(
@@ -51,6 +54,7 @@ object UserInfoManager {
 		lastLoginListId = loginInfo.listId ?: "000000"
 		UserInfoManager.loginInfo = loginInfo
 		PreferencesSecurity.accountInfo = JsonUtils.toJSON(loginInfo) ?: ""
+		Logger.d("MainComponent","accountInfo setLoginInfo ${JsonUtils.toJSON(loginInfo)}")
 	}
 
 	/**

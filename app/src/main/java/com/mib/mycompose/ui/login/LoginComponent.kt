@@ -1,4 +1,4 @@
-package com.mib.mycompose.ui.widget
+package com.mib.mycompose.ui.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,11 +30,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.mib.mycompose.R
 import com.mib.mycompose.constants.Scene.MAIN_PAGE
 import com.mib.mycompose.ui.theme.loginTextStyle
+import com.mib.mycompose.ui.widget.BasicTextFieldWithHint
 import com.mib.mycompose.util.Logger
 import com.mib.mycompose.viewmodel.MainViewModel
 
@@ -45,7 +46,8 @@ import com.mib.mycompose.viewmodel.MainViewModel
  */
 @Preview
 @Composable
-fun LoginContent(nav: NavHostController? = null, listener: MainViewModel.LoginPageListener? = null) {
+fun LoginComponent(nav: NavHostController? = null, mainViewModel: MainViewModel? = viewModel()) {
+	mainViewModel?.nav = nav
 	Box(
 		modifier = Modifier
 			.fillMaxSize()
@@ -154,8 +156,7 @@ fun LoginContent(nav: NavHostController? = null, listener: MainViewModel.LoginPa
 			Button(
 				onClick = {
 					// 处理按钮点击事件
-//					listener?.login(listId = accountEditValue, password = passwordEditValue)
-						  nav?.navigate(MAIN_PAGE)
+					mainViewModel?.login(account = accountEditValue, password = passwordEditValue)
 				},
 				modifier = Modifier
 					.constrainAs(btnLogin) {

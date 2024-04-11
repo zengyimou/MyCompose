@@ -13,6 +13,9 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mib.mycompose.constants.Scene.LOGIN_PAGE
 import com.mib.mycompose.constants.Scene.MAIN_PAGE
 import com.mib.mycompose.manager.UserInfoManager
+import com.mib.mycompose.ui.login.LoginComponent
+import com.mib.mycompose.ui.main.MainComponent
+import com.mib.mycompose.util.Logger
 import com.mib.mycompose.viewmodel.MainViewModel
 
 /**
@@ -31,16 +34,29 @@ fun DisneyMainScreen(mainViewModel: MainViewModel) {
 	var navigationBarColor by remember { mutableStateOf(colors.primaryVariant) }
 
 	//初始页面
-	val commonPage = if(!UserInfoManager.isLogin) MAIN_PAGE else LOGIN_PAGE
+	val commonPage = if(UserInfoManager.isLogin) NavScreen.Main.route else NavScreen.Login.route
 
+	mainViewModel.nav = navController
+	Logger.d("MainComponent","UserInfoManager.isLogin ${UserInfoManager.isLogin}")
 	NavHost(navController = navController, startDestination = commonPage) {
-		composable(LOGIN_PAGE){
-			LoginContent(nav = navController, listener = mainViewModel.loginListener)
+		//登陆页面
+		composable(route = NavScreen.Login.route){
+			LoginComponent(nav = navController)
 		}
-
-		composable(MAIN_PAGE){
+		//主页
+		composable(route = NavScreen.Main.route){
 			MainComponent(nav = navController)
 		}
 	}
 
+}
+
+sealed class NavScreen(val route: String) {
+
+	object Login : NavScreen(LOGIN_PAGE)
+	object Main : NavScreen(MAIN_PAGE) {
+
+//		const val routeWithArgument: String = "PosterDetails/{posterId}"
+//		const val argument0: String = "posterId"
+	}
 }

@@ -1,24 +1,19 @@
-package com.mib.mycompose.ui.widget
+package com.mib.mycompose.ui.main
 
-import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -28,16 +23,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.mib.mycompose.R
+import com.mib.mycompose.ext.toast
 import com.mib.mycompose.ui.theme.FF999999
 import com.mib.mycompose.ui.theme.White
+import com.mib.mycompose.util.Logger
+import com.mib.mycompose.viewmodel.MainViewModel
 
 /**
  *  author : cengyimou
@@ -46,10 +45,12 @@ import com.mib.mycompose.ui.theme.White
  */
 @Preview
 @Composable
-fun MainComponent(nav: NavHostController? = null) {
-
+fun MainComponent(nav: NavHostController? = null, mainPageViewModel: MainPageViewModel = viewModel()){
+	Logger.d("MainComponent", "current:${LocalViewModelStoreOwner.current}")
 	var selectItem by remember { mutableIntStateOf(0) }
 	val context = LocalContext.current
+	Logger.d("MainComponent","MainComponent ${mainPageViewModel.hashCode()}")
+	Logger.d("MainComponent","LocalContext.current ${LocalContext.current}")
 	val tabItemsStr = listOf(
 		context.getString(R.string.tab_main),
 		context.getString(R.string.tab_case),
@@ -87,8 +88,7 @@ fun MainComponent(nav: NavHostController? = null) {
 					}
 				}
 			}
-		){ innerPadding ->
-			val modifier = Modifier.padding(innerPadding)
+		){ _ ->
 			Crossfade(selectItem, label = "") { destination ->
 				when(destination) {
 					0 -> MainPage()
@@ -102,53 +102,8 @@ fun MainComponent(nav: NavHostController? = null) {
 		}
 	}
 
-}
-
-@Composable
-fun MainPage(){
-	ConstraintLayout(
-		modifier = Modifier
-			.fillMaxWidth()
-			.fillMaxHeight()
-			.background(White),
-	) {
-
+	BackHandler(enabled = true) {
+		context.toast("当前为主页，不能返回")
 	}
+
 }
-
-@Composable
-fun CasePage(){
-	ConstraintLayout(
-		modifier = Modifier
-			.fillMaxWidth()
-			.fillMaxHeight()
-			.background(FF999999),
-	) {
-
-	}
-}
-
-@Composable
-fun ContactPage(){
-	ConstraintLayout(
-		modifier = Modifier
-			.fillMaxWidth()
-			.fillMaxHeight()
-			.background(White),
-	) {
-
-	}
-}
-
-@Composable
-fun MePage(){
-	ConstraintLayout(
-		modifier = Modifier
-			.fillMaxWidth()
-			.fillMaxHeight()
-			.background(FF999999),
-	) {
-
-	}
-}
-

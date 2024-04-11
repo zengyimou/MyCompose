@@ -76,11 +76,7 @@ class SplashActivity: ComponentActivity() {
 	private fun enterApp() {
 		Logger.d(TAG, "enterApp")
 		val intent = Intent()
-		if (UserInfoManager.isLogin) {
-			intent.setClass(this, MainActivity::class.java)
-		} else {
-			intent.setClass(this, LoginActivity::class.java)
-		}
+		intent.setClass(this, LoginActivity::class.java)
 		startActivity(intent)
 		finish()
 	}

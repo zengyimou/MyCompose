@@ -1,8 +1,10 @@
 package com.mib.mycompose.viewmodel
 
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.NavHostController
 import com.mib.mycompose.manager.UserInfoManager
 import com.mib.mycompose.net.RequestHolder
+import com.mib.mycompose.ui.widget.NavScreen
 
 /**
  *  author : cengyimou
@@ -13,6 +15,8 @@ class MainViewModel : BaseViewModel(){
 
 	val loginLiveData = MutableLiveData<Boolean>()
 
+	var nav: NavHostController? = null
+
 	fun login(account: String, password: String){
 		retrieveData(
 			block = {
@@ -20,27 +24,13 @@ class MainViewModel : BaseViewModel(){
 			},
 			onSuccess = {data ->
 				data?.let { UserInfoManager.setLoginInfo(it) }
-				loginLiveData.value = true
+				nav?.navigate(NavScreen.Main.route)
 			},
 			onError = {
-				loginLiveData.value = false
 				false
 			}
 		)
 	}
 
-	var loginListener: LoginPageListener? = null
-		private set
-
-	fun setLoginPageListener(loginPageListener: LoginPageListener){
-		loginListener = loginPageListener
-	}
-
-	/**
-	 * 监听登录页交互
-	 */
-	interface LoginPageListener {
-		fun login(listId: String, password: String)
-	}
 
 }
