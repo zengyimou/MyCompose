@@ -27,12 +27,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.mib.mycompose.R
 import com.mib.mycompose.ext.toast
+import com.mib.mycompose.ui.theme.C_30B284
 import com.mib.mycompose.ui.theme.FF999999
 import com.mib.mycompose.ui.theme.White
 import com.mib.mycompose.util.Logger
@@ -49,13 +51,30 @@ fun MainComponent(nav: NavHostController? = null, mainPageViewModel: MainPageVie
 	Logger.d("MainComponent", "current:${LocalViewModelStoreOwner.current}")
 	var selectItem by remember { mutableIntStateOf(0) }
 	val context = LocalContext.current
-	Logger.d("MainComponent","MainComponent ${mainPageViewModel.hashCode()}")
-	Logger.d("MainComponent","LocalContext.current ${LocalContext.current}")
 	val tabItemsStr = listOf(
 		context.getString(R.string.tab_main),
 		context.getString(R.string.tab_case),
 		context.getString(R.string.tab_contact),
 		context.getString(R.string.tab_me)
+	)
+
+	val selectedIcon = listOf(
+		R.mipmap.icon_tab_btn_main_selected,
+		R.mipmap.icon_tab_btn_case_selected,
+		R.mipmap.icon_tab_btn_contact_selected,
+		R.mipmap.icon_tab_btn_me_selected
+	)
+
+	val unSelectIcon = listOf(
+		R.mipmap.icon_tab_btn_main_unselected,
+		R.mipmap.icon_tab_btn_case_unselected,
+		R.mipmap.icon_tab_btn_contact_unselected,
+		R.mipmap.icon_tab_btn_me_unselected
+	)
+
+	val tabTextColor = listOf(
+		C_30B284,
+		FF999999,
 	)
 
 	Surface(
@@ -70,7 +89,7 @@ fun MainComponent(nav: NavHostController? = null, mainPageViewModel: MainPageVie
 					tabItemsStr.forEachIndexed { index, item ->
 						BottomNavigationItem(
 							icon = {
-								var iconRes = R.mipmap.icon_tab_btn_case_selected
+								val iconRes = if(selectItem == index) selectedIcon[index] else unSelectIcon[index]
 								Box(
 									contentAlignment = Alignment.Center
 								) {
@@ -81,7 +100,8 @@ fun MainComponent(nav: NavHostController? = null, mainPageViewModel: MainPageVie
 									)
 								}
 							},
-							label = { Text(text = item, textAlign = TextAlign.Center) },
+							label = { Text(text = item, textAlign = TextAlign.Center, fontSize = 10.sp,
+								color = if(selectItem == index) tabTextColor[0] else tabTextColor[1]) },
 							selected = selectItem == index,
 							onClick = { selectItem = index }
 						)

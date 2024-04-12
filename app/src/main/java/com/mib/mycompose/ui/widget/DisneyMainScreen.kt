@@ -36,7 +36,6 @@ fun DisneyMainScreen(mainViewModel: MainViewModel) {
 	//初始页面
 	val commonPage = if(UserInfoManager.isLogin) NavScreen.Main.route else NavScreen.Login.route
 
-	mainViewModel.nav = navController
 	Logger.d("MainComponent","UserInfoManager.isLogin ${UserInfoManager.isLogin}")
 	NavHost(navController = navController, startDestination = commonPage) {
 		//登陆页面

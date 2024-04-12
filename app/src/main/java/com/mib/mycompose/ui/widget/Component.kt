@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,12 +26,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -39,6 +42,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -266,5 +270,25 @@ fun BasicTextFieldWithPassword(
 			}
 
 		}
+	}
+}
+
+@Composable
+fun TextWithEndIcon(
+	text: String,
+	fontSize: TextUnit,
+	fontWeight: FontWeight,
+	res: Int,
+	modifier: Modifier = Modifier,
+	textModifier: Modifier = Modifier,
+) {
+	Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+		Text(text = text, fontSize = fontSize, fontWeight = fontWeight, modifier = textModifier)
+		Image(
+			painter = painterResource(id = res),
+			contentDescription = null,
+			modifier = Modifier.padding(start = 4.dp),
+
+		)
 	}
 }

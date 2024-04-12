@@ -17,6 +17,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,6 +37,7 @@ import com.mib.mycompose.R
 import com.mib.mycompose.constants.Scene.MAIN_PAGE
 import com.mib.mycompose.ui.theme.loginTextStyle
 import com.mib.mycompose.ui.widget.BasicTextFieldWithHint
+import com.mib.mycompose.ui.widget.NavScreen
 import com.mib.mycompose.util.Logger
 import com.mib.mycompose.viewmodel.MainViewModel
 
@@ -47,7 +49,10 @@ import com.mib.mycompose.viewmodel.MainViewModel
 @Preview
 @Composable
 fun LoginComponent(nav: NavHostController? = null, mainViewModel: MainViewModel? = viewModel()) {
-	mainViewModel?.nav = nav
+	val loginResult = mainViewModel?.loginLiveData?.observeAsState()
+	if(loginResult?.value == true){
+		nav?.navigate(NavScreen.Main.route)
+	}
 	Box(
 		modifier = Modifier
 			.fillMaxSize()

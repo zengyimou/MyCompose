@@ -15,7 +15,6 @@ class MainViewModel : BaseViewModel(){
 
 	val loginLiveData = MutableLiveData<Boolean>()
 
-	var nav: NavHostController? = null
 
 	fun login(account: String, password: String){
 		retrieveData(
@@ -24,9 +23,10 @@ class MainViewModel : BaseViewModel(){
 			},
 			onSuccess = {data ->
 				data?.let { UserInfoManager.setLoginInfo(it) }
-				nav?.navigate(NavScreen.Main.route)
+				loginLiveData.value = true
 			},
 			onError = {
+				loginLiveData.value = false
 				false
 			}
 		)
