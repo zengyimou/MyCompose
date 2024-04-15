@@ -14,7 +14,7 @@ import com.mib.mycompose.ui.theme.White
  *  description :
  */
 @Composable
-fun ContactPage(){
+fun ContactPage(modifier: Modifier = Modifier){
 	ConstraintLayout(
 		modifier = Modifier
 			.fillMaxWidth()

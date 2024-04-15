@@ -1,28 +1,24 @@
 package com.mib.mycompose.ui.main
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Switch
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,13 +30,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mib.mycompose.R
 import com.mib.mycompose.ext.toast
 import com.mib.mycompose.ui.theme.C_111111
+import com.mib.mycompose.ui.theme.C_1A18FFAD
+import com.mib.mycompose.ui.theme.C_1AFF6C1D
 import com.mib.mycompose.ui.theme.C_30B284
 import com.mib.mycompose.ui.theme.C_666666
-import com.mib.mycompose.ui.theme.C_F86161
-import com.mib.mycompose.ui.theme.C_F8F8F8
 import com.mib.mycompose.ui.theme.FF999999
 import com.mib.mycompose.ui.theme.White
 import com.mib.mycompose.ui.widget.CircleRing
+import com.mib.mycompose.ui.widget.ClSipControl
+import com.mib.mycompose.ui.widget.InfoItem
+import com.mib.mycompose.ui.widget.MainPageColorItem
+import com.mib.mycompose.ui.widget.MainPageTab
 import com.mib.mycompose.ui.widget.TextWithEndIcon
 import com.mib.mycompose.util.Logger
 
@@ -51,7 +51,7 @@ import com.mib.mycompose.util.Logger
  */
 @Preview
 @Composable
-fun MainPage(mainPageViewModel: MainPageViewModel= viewModel()){
+fun MainPage(modifier: Modifier = Modifier, mainPageViewModel: MainPageViewModel= viewModel()){
 	Logger.d("MainComponent","MainPage ${mainPageViewModel.hashCode()}")
 	/** 是否显示Sip提醒模块*/
 	var isShowSipControl by remember { mutableStateOf(true) }
@@ -63,12 +63,13 @@ fun MainPage(mainPageViewModel: MainPageViewModel= viewModel()){
 	val context = LocalContext.current
 
 	ConstraintLayout(
-		modifier = Modifier
+		modifier = modifier
 			.fillMaxWidth()
 			.fillMaxHeight()
-			.background(White),
+			.background(White)
+			.verticalScroll(rememberScrollState()),
 	) {
-		val ( tvHello, tvSoContent, clSipControl ) = createRefs()
+		val ( tvHello, tvSoContent, clSipControl, bottomSpacer ) = createRefs()
 
 		TextWithEndIcon(
 			text= "hello,AAA",
@@ -169,82 +170,149 @@ fun MainPage(mainPageViewModel: MainPageViewModel= viewModel()){
 				width = Dimension.wrapContent
 			},
 			width = 240,
-			pointOfYearPercent = 70f,
+			pointOfYearPercent = 70F,
 			content = "70%",
 			label = "Collected amount rate"
 		)
 
-	}
-}
-
-@Composable
-fun ClSipControl(modifier: Modifier = Modifier, checked: Boolean = true,
-                 isShowTips: Boolean, checkListener: (Boolean) -> Unit = {}){
-	ConstraintLayout(
-		modifier = modifier
-			.background(
-				color = C_F8F8F8,
-				shape = RoundedCornerShape(12.dp)
-			)
-			.padding(horizontal = 16.dp, vertical = 12.dp),
-	) {
-		val (
-			tvTitle, tvTips, ivSipTips, switchSip,
-		) = createRefs()
-		Image(
+		val ( mainPageCollectCase, mainPageCollectAmount ) = createRefs()
+		MainPageColorItem(
+			iconRes = R.mipmap.icon_collect_case,
+			title = "Collected cases",
+			content = "80",
+			description = "Total: 120",
 			modifier = Modifier
-				.constrainAs(ivSipTips) {
-					top.linkTo(parent.top)
-					start.linkTo(parent.start)
-					bottom.linkTo(parent.bottom)
-				}
-				.width(20.dp)
-				.height(20.dp),
-			painter = painterResource(id = R.mipmap.ic_deline),
-			contentDescription = null
-		)
-
-		Text(
-			text = "Fuera de linea",
-			color = C_111111,
-			fontSize = 14.sp,
-			modifier = Modifier
-				.constrainAs(tvTitle) {
-					top.linkTo(parent.top)
-					start.linkTo(ivSipTips.end, 10.dp)
-					end.linkTo(switchSip.start)
+				.constrainAs(mainPageCollectCase) {
+					top.linkTo(circleRing.bottom, 25.dp)
+					start.linkTo(parent.start, 16.dp)
+					end.linkTo(mainPageCollectAmount.start, 8.dp)
 					width = Dimension.fillToConstraints
-					//height = Dimension.wrapContent
+				}
+				.background(color = C_1A18FFAD, shape = RoundedCornerShape(12.dp))
+		)
+
+		MainPageColorItem(
+			iconRes = R.mipmap.icon_collect_amount,
+			title = "Collected  amount",
+			content = "123123123123",
+			description = "Total: 123123123123",
+			modifier = Modifier
+				.constrainAs(mainPageCollectAmount) {
+					top.linkTo(mainPageCollectCase.top)
+					start.linkTo(mainPageCollectCase.end)
+					end.linkTo(parent.end, 16.dp)
+					width = Dimension.fillToConstraints
+				}
+				.background(color = C_1AFF6C1D, shape = RoundedCornerShape(12.dp))
+		)
+
+		val ( infoItemCallCount, infoItemCallCases, infoItemCallDuration,
+			infoItemSendMessage, infoItemOnlineTime, infoItemGroupRanking ) = createRefs()
+
+		InfoItem(
+			title = context.getString(R.string.main_collect_call_counting),
+			content = "123",
+			modifier = Modifier.constrainAs(infoItemCallCount){
+				top.linkTo(mainPageCollectAmount.bottom, 16.dp)
+				start.linkTo(mainPageCollectCase.start)
+				end.linkTo(infoItemCallCases.start, 8.dp)
+				width = Dimension.fillToConstraints
+			}
+		)
+
+		InfoItem(
+			title = context.getString(R.string.main_collect_call_cases),
+			content = "123",
+			modifier = Modifier.constrainAs(infoItemCallCases){
+				top.linkTo(infoItemCallCount.top)
+				start.linkTo(infoItemCallCount.end)
+				end.linkTo(infoItemCallDuration.start, 8.dp)
+				width = Dimension.fillToConstraints
+			}
+		)
+
+		InfoItem(
+			title = context.getString(R.string.main_collect_call_duration),
+			content = "123",
+			isRankOne = true,
+			modifier = Modifier.constrainAs(infoItemCallDuration){
+				top.linkTo(infoItemCallCount.top)
+				start.linkTo(infoItemCallCases.end)
+				end.linkTo(parent.end, 16.dp)
+				width = Dimension.fillToConstraints
+			}
+		)
+
+		InfoItem(
+			title = context.getString(R.string.main_collect_send_message),
+			content = "123",
+			modifier = Modifier.constrainAs(infoItemSendMessage){
+				top.linkTo(infoItemCallCount.bottom, 8.dp)
+				start.linkTo(mainPageCollectCase.start)
+				end.linkTo(infoItemOnlineTime.start, 8.dp)
+				width = Dimension.fillToConstraints
+			}
+		)
+
+		InfoItem(
+			title = context.getString(R.string.main_collect_onlinetime),
+			content = "123",
+			modifier = Modifier.constrainAs(infoItemOnlineTime){
+				top.linkTo(infoItemSendMessage.top)
+				start.linkTo(infoItemSendMessage.end)
+				end.linkTo(infoItemGroupRanking.start, 8.dp)
+				width = Dimension.fillToConstraints
+			}
+		)
+
+		InfoItem(
+			title = context.getString(R.string.main_collect_group_ranking),
+			content = "123",
+			isRankOne = true,
+			modifier = Modifier.constrainAs(infoItemGroupRanking){
+				top.linkTo(infoItemSendMessage.top)
+				start.linkTo(infoItemOnlineTime.end)
+				end.linkTo(parent.end, 16.dp)
+				width = Dimension.fillToConstraints
+			}
+		)
+
+		val ( tvCaseData, tabContent, columnCaseData ) = createRefs()
+		Text(
+			text = "Today's case data",
+			color = C_111111,
+			fontSize = 24.sp,
+			style = TextStyle(
+				fontWeight = FontWeight.Bold,
+			),
+			modifier = Modifier
+				.constrainAs(tvCaseData) {
+					top.linkTo(infoItemGroupRanking.bottom, 32.dp)
+					start.linkTo(parent.start, 16.dp)
+					end.linkTo(parent.end)
+					width = Dimension.fillToConstraints
 				}
 		)
-		if(isShowTips){
-			Text(
-				text = "SIP isn’t connected, please log in again",
-				color = C_F86161,
-				fontSize = 10.sp,
-				modifier = Modifier
-					.constrainAs(tvTips) {
-						top.linkTo(tvTitle.bottom, 4.dp)
-						start.linkTo(tvTitle.start)
-						end.linkTo(switchSip.start)
-						bottom.linkTo(parent.bottom)
-						width = Dimension.fillToConstraints
-						//height = Dimension.wrapContent
-					}
-			)
+		val caseDataList = mainPageViewModel.caseDataList.observeAsState()
+		MainPageTab(modifier =  Modifier.constrainAs(tabContent){
+			top.linkTo(tvCaseData.bottom, 16.dp)
+			start.linkTo(parent.start, 16.dp)
+			end.linkTo(parent.end, 16.dp)
+			width = Dimension.fillToConstraints
+		}){ selectIndex ->
+			mainPageViewModel.clickMainPageTab(index = selectIndex)
 		}
-
-		Switch(checked = checked, onCheckedChange = {
-			checkListener.invoke(it)
-		},
-			Modifier
-				.constrainAs(switchSip) {
-					top.linkTo(parent.top)
-					end.linkTo(parent.end)
-					bottom.linkTo(parent.bottom)
-					width = Dimension.wrapContent
-				}
-				.height(20.dp))
+		Column(
+			modifier = Modifier.constrainAs(columnCaseData){
+				top.linkTo(tabContent.bottom, 16.dp)
+				start.linkTo(parent.start, 16.dp)
+				end.linkTo(parent.end, 16.dp)
+			}
+		) {
+			caseDataList.value?.forEach{
+				Text(text = it.eventTitle?: "")
+			}
+		}
 
 	}
 }

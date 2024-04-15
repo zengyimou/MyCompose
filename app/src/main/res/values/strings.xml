@@ -7,4 +7,11 @@
     <string name="tab_contact">Contact</string>
     <string name="tab_me">Me</string>
 
+    <string name="main_collect_call_counting">Call counting</string>
+    <string name="main_collect_call_cases">Call cases</string>
+    <string name="main_collect_call_duration">Call duration</string>
+    <string name="main_collect_send_message">Send messages</string>
+    <string name="main_collect_onlinetime">App Onlinetime</string>
+    <string name="main_collect_group_ranking">Group ranking</string>
+
 </resources>

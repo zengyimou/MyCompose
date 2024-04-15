@@ -14,7 +14,7 @@ import com.mib.mycompose.ui.theme.FF999999
  *  description :
  */
 @Composable
-fun MePage(){
+fun MePage(modifier: Modifier = Modifier){
 	ConstraintLayout(
 		modifier = Modifier
 			.fillMaxWidth()

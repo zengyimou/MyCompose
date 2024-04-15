@@ -6,8 +6,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -77,14 +79,13 @@ fun MainComponent(nav: NavHostController? = null, mainPageViewModel: MainPageVie
 		FF999999,
 	)
 
-	Surface(
-		modifier = Modifier.background(color = White),
-	){
+	Box{
 		Scaffold(
+			modifier = Modifier.fillMaxWidth().fillMaxHeight().background(color = White),
 			bottomBar = {
 				BottomNavigation(
 					backgroundColor = White,
-					modifier = Modifier.height(64.dp)
+					modifier = Modifier.height(64.dp).navigationBarsPadding()
 				) {
 					tabItemsStr.forEachIndexed { index, item ->
 						BottomNavigationItem(
@@ -108,14 +109,15 @@ fun MainComponent(nav: NavHostController? = null, mainPageViewModel: MainPageVie
 					}
 				}
 			}
-		){ _ ->
+		){ innerPadding ->
+			val modifier = Modifier.padding(innerPadding)
 			Crossfade(selectItem, label = "") { destination ->
 				when(destination) {
-					0 -> MainPage()
-					1 -> CasePage()
-					2 -> ContactPage()
-					3 -> MePage()
-					else -> MainPage()
+					0 -> MainPage(modifier = modifier)
+					1 -> CasePage(modifier = modifier)
+					2 -> ContactPage(modifier = modifier)
+					3 -> MePage(modifier = modifier)
+					else -> MainPage(modifier = modifier)
 				}
 			}
 

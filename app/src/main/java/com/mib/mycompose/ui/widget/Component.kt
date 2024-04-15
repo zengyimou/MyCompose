@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absolutePadding
@@ -16,6 +17,8 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Tab
+import androidx.compose.material.TabRow
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -47,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.mib.mycompose.R
+import com.mib.mycompose.ui.main.CaseData
 import com.mib.mycompose.ui.theme.editTextHintStyle
 
 /**
@@ -291,4 +295,48 @@ fun TextWithEndIcon(
 
 		)
 	}
+}
+
+@Composable
+fun TextWithStartIcon(
+	text: String,
+	fontSize: TextUnit,
+	fontWeight: FontWeight = FontWeight.Normal,
+	res: Int,
+	color: Color,
+	modifier: Modifier = Modifier,
+	textModifier: Modifier = Modifier,
+) {
+	Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+		Image(
+			painter = painterResource(id = res),
+			contentDescription = null,
+			modifier = Modifier.padding(end = 5.dp),
+
+			)
+		Text(text = text, fontSize = fontSize, fontWeight = fontWeight, modifier = textModifier, color = color)
+	}
+}
+
+@Composable
+fun CaseDataTabContent(modifier: Modifier = Modifier,
+                       caseDataList: List<CaseData>?,
+                       tabClickListener: (index: Int)-> Unit = {}){
+	val selectIndexState = remember { mutableStateOf(0) }
+	val titles = listOf<String>("Unpaid cases", "Paid cases")
+	Column{
+		TabRow(selectedTabIndex = selectIndexState.value){
+			titles.forEachIndexed { index, value ->
+				Tab(
+					selected = selectIndexState.value == index,
+					onClick = {
+						selectIndexState.value = index
+					}
+				){
+
+				}
+			}
+		}
+	}
+
 }

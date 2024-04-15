@@ -22,7 +22,7 @@ import com.mib.mycompose.ui.theme.C_F8F8F8
  */
 @Preview
 @Composable
-fun CircleRing(modifier: Modifier = Modifier, width: Int = 180,  pointOfYearPercent: Float = 40F, content: String = "测试", label: String = "label xxxxxx"){
+fun CircleRing(modifier: Modifier = Modifier, width: Int = 180,  pointOfYearPercent: Float = 50F, content: String = "测试", label: String = "label xxxxxx"){
 	Canvas(modifier = modifier.size(width.dp, (width / 2).dp), onDraw = {
 		val canvasWidth = size.width
 		val canvasHeight = size.height
@@ -45,7 +45,7 @@ fun CircleRing(modifier: Modifier = Modifier, width: Int = 180,  pointOfYearPerc
 		drawArc(
 			C_30B284,
 			startAngle = 180f,
-			sweepAngle = pointOfYearPercent,
+			sweepAngle = pointOfYearPercent / 100f * 180f,
 			topLeft = center,
 			useCenter = false,
 			size = arcSize,
