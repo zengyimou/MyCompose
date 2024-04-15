@@ -22,20 +22,23 @@ import com.mib.mycompose.ui.theme.C_F8F8F8
  */
 @Preview
 @Composable
-fun CircleRing(modifier: Modifier = Modifier, radius: Float = 60F,  pointOfYearPercent: Float = 40F, content: String = "测试", label: String = "label xxxxxx"){
-	Canvas(modifier = modifier.size((radius * 3).dp, (radius * 2).dp), onDraw = {
+fun CircleRing(modifier: Modifier = Modifier, width: Int = 180,  pointOfYearPercent: Float = 40F, content: String = "测试", label: String = "label xxxxxx"){
+	Canvas(modifier = modifier.size(width.dp, (width / 2).dp), onDraw = {
+		val canvasWidth = size.width
+		val canvasHeight = size.height
 		val strokeWidth = 30F
-		val topLeft = Offset(radius - strokeWidth, radius - strokeWidth)
-//		val topLeft = Offset.Zero
-		val size = Size(radius * 7, radius * 7)
+		val center = Offset(45F, 30F)
+//		val center = Offset.Zero
+		val arcRadius = canvasWidth - strokeWidth * 3
+		val arcSize = Size(arcRadius, arcRadius)
 		//灰色背景
 		drawArc(
 			C_F8F8F8,
 			startAngle = 180f,
 			sweepAngle = 180f,
+			topLeft = center,
 			useCenter = false,
-			topLeft = topLeft,
-			size = size,
+			size = arcSize,
 			style = Stroke(strokeWidth, cap = StrokeCap.Round),
 		)
 
@@ -43,30 +46,30 @@ fun CircleRing(modifier: Modifier = Modifier, radius: Float = 60F,  pointOfYearP
 			C_30B284,
 			startAngle = 180f,
 			sweepAngle = pointOfYearPercent,
+			topLeft = center,
 			useCenter = false,
-			topLeft = topLeft,
-			size = size,
+			size = arcSize,
 			style = Stroke(strokeWidth, cap = StrokeCap.Round),
 		)
 
 		drawIntoCanvas { canvas ->
 			val paint = androidx.compose.ui.graphics.Paint().asFrameworkPaint()
-			paint.textSize = 40f
+			paint.textSize = 65f
 			paint.color = android.graphics.Color.BLACK
 			paint.textAlign = android.graphics.Paint.Align.LEFT
 			paint.isFakeBoldText = true
-			val x = size.width / 2 - paint.measureText(content) / 2
-			val y = size.height / 2 + paint.fontMetrics.descent
+			val x = canvasWidth / 2 - paint.measureText(content) / 2
+			val y = canvasHeight / 2 + 30F
 			canvas.nativeCanvas.drawText(content, x, y, paint)
 		}
 
 		drawIntoCanvas { canvas ->
 			val paint = androidx.compose.ui.graphics.Paint().asFrameworkPaint()
-			paint.textSize = 20f
+			paint.textSize = 28f
 			paint.color = android.graphics.Color.BLACK
 			paint.textAlign = android.graphics.Paint.Align.LEFT
-			val x = size.width / 2 - paint.measureText(label) / 2
-			val y = size.height / 2
+			val x = canvasWidth / 2 - paint.measureText(label) / 2
+			val y = canvasHeight - 30F
 			canvas.nativeCanvas.drawText(label, x, y, paint)
 		}
 

@@ -167,7 +167,11 @@ fun MainPage(mainPageViewModel: MainPageViewModel= viewModel()){
 				start.linkTo(parent.start, 16.dp)
 				end.linkTo(parent.end, 16.dp)
 				width = Dimension.wrapContent
-			}
+			},
+			width = 240,
+			pointOfYearPercent = 70f,
+			content = "70%",
+			label = "Collected amount rate"
 		)
 
 	}
