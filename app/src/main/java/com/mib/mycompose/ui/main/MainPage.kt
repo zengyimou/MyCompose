@@ -1,6 +1,6 @@
 package com.mib.mycompose.ui.main
 
-import android.widget.ScrollView
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -51,6 +50,7 @@ import com.mib.mycompose.ui.widget.ClSipControl
 import com.mib.mycompose.ui.widget.InfoItem
 import com.mib.mycompose.ui.widget.MainPageColorItem
 import com.mib.mycompose.ui.widget.MainPageTab
+import com.mib.mycompose.ui.widget.NavScreen
 import com.mib.mycompose.ui.widget.TabContentItem
 import com.mib.mycompose.ui.widget.TextWithEndIcon
 import com.mib.mycompose.util.Logger
@@ -70,16 +70,24 @@ fun MainPage(
 	val TAG = "MainPage"
 	Logger.d(TAG,"MainPage ${mainPageViewModel.hashCode()}")
 	/** 是否显示Sip提醒模块*/
-	var isShowSipControl by remember { mutableStateOf(true) }
+	var isShowSipControl by rememberSaveable { mutableStateOf(true) }
 	/** 是否显示sip提醒文案*/
-	var isShowSipTips by remember { mutableStateOf(true) }
+	var isShowSipTips by rememberSaveable { mutableStateOf(true) }
 	/** Sip按钮状态*/
-	var switchIsCheck by remember { mutableStateOf(false) }
-	Logger.d(TAG, "switchIsCheck:${switchIsCheck}")
-	val context = LocalContext.current
+	var switchIsCheck by rememberSaveable { mutableStateOf(false) }
+
+	var selectCaseTab by rememberSaveable { mutableStateOf(0) }
+
+	var isFirstInitPgae by rememberSaveable { mutableStateOf(true) }
 
 	val caseDataList = mainPageViewModel.caseDataList.observeAsState()
-	mainPageViewModel.initCaseDataList()
+
+	val context = LocalContext.current
+
+	if(isFirstInitPgae){
+		mainPageViewModel.initCaseDataList()
+		isFirstInitPgae = false
+	}
 	//滚动状态
 	LaunchedEffect(Unit){
 		Logger.d(TAG, "LaunchedEffect!!!")
@@ -321,7 +329,8 @@ fun MainPage(
 			start.linkTo(parent.start, 16.dp)
 			end.linkTo(parent.end, 16.dp)
 			width = Dimension.fillToConstraints
-		}){ selectIndex ->
+		}, selectIndexState = selectCaseTab){ selectIndex ->
+			selectCaseTab = selectIndex
 			mainPageViewModel.clickMainPageTab(index = selectIndex)
 		}
 		Column(
@@ -351,6 +360,9 @@ fun MainPage(
 				Spacer(modifier = Modifier.height(16.dp))
 			}
 		}
+	}
+	BackHandler(enabled = true) {
+		context.toast("当前为主页，不能返回")
 	}
 
 }

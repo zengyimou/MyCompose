@@ -77,8 +77,6 @@ fun DisneyMainScreen(mainViewModel: MainViewModel) {
 		targetValue = navigationBarColor,
 		animationSpec = tween()
 	)
-	val context = LocalContext.current
-
 	//tab数组
 	val tabs = listOf(NavScreen.TabMain, NavScreen.TabCase, NavScreen.TabContact, NavScreen.TabMe)
 
@@ -89,11 +87,6 @@ fun DisneyMainScreen(mainViewModel: MainViewModel) {
 		//初始页面
 		val commonPage = if(UserInfoManager.isLogin) NavScreen.TabMain.route else NavScreen.Login.route
 		Logger.d("MainComponent","UserInfoManager.isLogin ${UserInfoManager.isLogin}")
-
-		val navBackStackEntry by navController.currentBackStackEntryAsState()
-		val currentRoute = navBackStackEntry?.destination?.route
-			?: NavScreen.TabMain.route
-		val routes = remember { tabs.map { it.route } }
 
 		NavHost(navController = navController, startDestination = commonPage) {
 			//登陆页面
@@ -130,11 +123,6 @@ fun DisneyMainScreen(mainViewModel: MainViewModel) {
 			}
 			composable(route = NavTabScreen.Me.route) {
 				MePage(modifier = modifier, navHostController = navController)
-			}
-		}
-		BackHandler(enabled = true) {
-			if (currentRoute in routes) {
-				context.toast("当前为主页，不能返回")
 			}
 		}
 	}
@@ -215,7 +203,13 @@ fun BottomBar(navController: NavController, tabs: List<NavScreen>){
 							3 -> NavTabScreen.Me.route
 							else -> NavTabScreen.Main.route
 						}
-						navController.navigate(route)
+						navController.navigate(route){
+							popUpTo(navController.graph.startDestinationId) {
+								saveState = true
+							}
+							launchSingleTop = true
+							restoreState = true
+						}
 					}
 				)
 			}

@@ -217,9 +217,10 @@ fun InfoItem(
 @Composable
 fun MainPageTab(
 	modifier: Modifier = Modifier,
+	selectIndexState: Int = 0,
 	listener: (index: Int) -> Unit = {}
 ) {
-	var selectIndexState by remember { mutableStateOf(0) }
+//	var selectIndexState by remember { mutableStateOf(0) }
 	ConstraintLayout(
 		modifier = modifier.fillMaxWidth()
 	) {
@@ -234,8 +235,7 @@ fun MainPageTab(
 				start.linkTo(parent.start)
 			}.clickable {
 				if(selectIndexState != 0){
-					selectIndexState = 0
-					listener.invoke(selectIndexState)
+					listener.invoke(0)
 				}
 			}
 		)
@@ -250,8 +250,7 @@ fun MainPageTab(
 				start.linkTo(tvUnPaid.end, 50.dp)
 			}.clickable {
 				if(selectIndexState != 1){
-					selectIndexState = 1
-					listener.invoke(selectIndexState)
+					listener.invoke(1)
 				}
 			}
 		)
