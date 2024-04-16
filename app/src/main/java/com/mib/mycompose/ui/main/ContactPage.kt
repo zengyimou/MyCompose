@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.mib.mycompose.ui.theme.White
 
 /**
@@ -14,7 +16,7 @@ import com.mib.mycompose.ui.theme.White
  *  description :
  */
 @Composable
-fun ContactPage(modifier: Modifier = Modifier){
+fun ContactPage(modifier: Modifier = Modifier, navHostController: NavHostController = rememberNavController(),){
 	ConstraintLayout(
 		modifier = Modifier
 			.fillMaxWidth()

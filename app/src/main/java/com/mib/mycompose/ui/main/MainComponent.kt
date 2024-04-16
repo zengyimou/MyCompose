@@ -17,12 +17,14 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -34,11 +36,18 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.mib.mycompose.R
+import com.mib.mycompose.constants.Scene
 import com.mib.mycompose.ext.toast
+import com.mib.mycompose.ui.login.LoginComponent
 import com.mib.mycompose.ui.theme.C_30B284
+import com.mib.mycompose.ui.theme.C_Main
 import com.mib.mycompose.ui.theme.FF999999
 import com.mib.mycompose.ui.theme.White
+import com.mib.mycompose.ui.widget.NavScreen
 import com.mib.mycompose.util.Logger
 import com.mib.mycompose.viewmodel.MainViewModel
 
@@ -49,7 +58,7 @@ import com.mib.mycompose.viewmodel.MainViewModel
  */
 @Preview
 @Composable
-fun MainComponent(nav: NavHostController? = null, mainPageViewModel: MainPageViewModel = viewModel()){
+fun MainComponent(nav: NavHostController = rememberNavController(), mainPageViewModel: MainPageViewModel = viewModel()) {
 	Logger.d("MainComponent", "current:${LocalViewModelStoreOwner.current}")
 	var selectItem by remember { mutableIntStateOf(0) }
 	val context = LocalContext.current
@@ -79,18 +88,25 @@ fun MainComponent(nav: NavHostController? = null, mainPageViewModel: MainPageVie
 		FF999999,
 	)
 
-	Box{
+	val bottomNavController = rememberNavController()
+
+	Box {
 		Scaffold(
-			modifier = Modifier.fillMaxWidth().fillMaxHeight().background(color = White),
+			modifier = Modifier
+				.fillMaxWidth()
+				.fillMaxHeight()
+				.background(color = White),
 			bottomBar = {
 				BottomNavigation(
 					backgroundColor = White,
-					modifier = Modifier.height(64.dp).navigationBarsPadding()
+					modifier = Modifier
+						.height(64.dp)
+						.navigationBarsPadding()
 				) {
 					tabItemsStr.forEachIndexed { index, item ->
 						BottomNavigationItem(
 							icon = {
-								val iconRes = if(selectItem == index) selectedIcon[index] else unSelectIcon[index]
+								val iconRes = if (selectItem == index) selectedIcon[index] else unSelectIcon[index]
 								Box(
 									contentAlignment = Alignment.Center
 								) {
@@ -101,23 +117,51 @@ fun MainComponent(nav: NavHostController? = null, mainPageViewModel: MainPageVie
 									)
 								}
 							},
-							label = { Text(text = item, textAlign = TextAlign.Center, fontSize = 10.sp,
-								color = if(selectItem == index) tabTextColor[0] else tabTextColor[1]) },
+							label = {
+								Text(
+									text = item, textAlign = TextAlign.Center, fontSize = 10.sp,
+									color = if (selectItem == index) tabTextColor[0] else tabTextColor[1]
+								)
+							},
 							selected = selectItem == index,
-							onClick = { selectItem = index }
+							onClick = {
+								selectItem = index
+								val route = when (selectItem) {
+									0 -> NavTabScreen.Main.route
+									1 -> NavTabScreen.Case.route
+									2 -> NavTabScreen.Contact.route
+									3 -> NavTabScreen.Me.route
+									else -> NavTabScreen.Main.route
+								}
+								bottomNavController.navigate(route)
+							}
 						)
 					}
 				}
 			}
-		){ innerPadding ->
+		) { innerPadding ->
 			val modifier = Modifier.padding(innerPadding)
-			Crossfade(selectItem, label = "") { destination ->
-				when(destination) {
-					0 -> MainPage(modifier = modifier)
-					1 -> CasePage(modifier = modifier)
-					2 -> ContactPage(modifier = modifier)
-					3 -> MePage(modifier = modifier)
-					else -> MainPage(modifier = modifier)
+//			Crossfade(selectItem, label = "") { destination ->
+//				when(destination) {
+//					0 -> MainPage(modifier = modifier)
+//					1 -> CasePage(modifier = modifier)
+//					2 -> ContactPage(modifier = modifier)
+//					3 -> MePage(modifier = modifier)
+//					else -> MainPage(modifier = modifier)
+//				}
+//			}
+			NavHost(navController = bottomNavController, startDestination = NavTabScreen.Main.route) {
+				composable(route = NavTabScreen.Main.route) {
+					MainPage(modifier = modifier, navHostController = nav)
+				}
+				composable(route = NavTabScreen.Case.route) {
+					CasePage(modifier = modifier, navHostController = nav)
+				}
+				composable(route = NavTabScreen.Contact.route) {
+					ContactPage(modifier = modifier, navHostController = nav)
+				}
+				composable(route = NavTabScreen.Me.route) {
+					MePage(modifier = modifier, navHostController = nav)
 				}
 			}
 
@@ -128,4 +172,11 @@ fun MainComponent(nav: NavHostController? = null, mainPageViewModel: MainPageVie
 		context.toast("当前为主页，不能返回")
 	}
 
+}
+
+sealed class NavTabScreen(val route: String) {
+	object Main : NavTabScreen(Scene.TAG_MAIN_PAGE)
+	object Case : NavTabScreen(Scene.TAG_CASE_PAGE)
+	object Contact : NavTabScreen(Scene.TAG_CONTACT_PAGE)
+	object Me : NavTabScreen(Scene.TAG_ME_PAGE)
 }

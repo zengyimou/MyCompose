@@ -34,7 +34,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.mib.mycompose.R
-import com.mib.mycompose.constants.Scene.MAIN_PAGE
 import com.mib.mycompose.ui.theme.loginTextStyle
 import com.mib.mycompose.ui.widget.BasicTextFieldWithHint
 import com.mib.mycompose.ui.widget.NavScreen
@@ -51,7 +50,7 @@ import com.mib.mycompose.viewmodel.MainViewModel
 fun LoginComponent(nav: NavHostController? = null, mainViewModel: MainViewModel? = viewModel()) {
 	val loginResult = mainViewModel?.loginLiveData?.observeAsState()
 	if(loginResult?.value == true){
-		nav?.navigate(NavScreen.Main.route)
+		nav?.navigate(NavScreen.TabMain.route)
 	}
 	Box(
 		modifier = Modifier

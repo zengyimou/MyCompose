@@ -7,5 +7,9 @@ package com.mib.mycompose.constants
  */
 object Scene {
 	const val LOGIN_PAGE = "login"
-	const val MAIN_PAGE = "main"
+
+	const val TAG_MAIN_PAGE = "tab_main"
+	const val TAG_CASE_PAGE = "tab_case"
+	const val TAG_CONTACT_PAGE = "tab_contact"
+	const val TAG_ME_PAGE = "tab_me"
 }

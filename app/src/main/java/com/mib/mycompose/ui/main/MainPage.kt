@@ -1,5 +1,6 @@
 package com.mib.mycompose.ui.main
 
+import android.widget.ScrollView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,8 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.mib.mycompose.R
 import com.mib.mycompose.ext.toast
 import com.mib.mycompose.ui.theme.C_111111
@@ -59,23 +62,28 @@ import com.mib.mycompose.util.Logger
  */
 @Preview
 @Composable
-fun MainPage(modifier: Modifier = Modifier, mainPageViewModel: MainPageViewModel= viewModel()){
-	Logger.d("MainComponent","MainPage ${mainPageViewModel.hashCode()}")
+fun MainPage(
+	modifier: Modifier = Modifier,
+	navHostController: NavHostController = rememberNavController(),
+	mainPageViewModel: MainPageViewModel= viewModel()
+){
+	val TAG = "MainPage"
+	Logger.d(TAG,"MainPage ${mainPageViewModel.hashCode()}")
 	/** 是否显示Sip提醒模块*/
 	var isShowSipControl by remember { mutableStateOf(true) }
 	/** 是否显示sip提醒文案*/
 	var isShowSipTips by remember { mutableStateOf(true) }
 	/** Sip按钮状态*/
 	var switchIsCheck by remember { mutableStateOf(false) }
-
+	Logger.d(TAG, "switchIsCheck:${switchIsCheck}")
 	val context = LocalContext.current
 
 	val caseDataList = mainPageViewModel.caseDataList.observeAsState()
+	mainPageViewModel.initCaseDataList()
+	//滚动状态
 	LaunchedEffect(Unit){
-		mainPageViewModel.initCaseDataList()
+		Logger.d(TAG, "LaunchedEffect!!!")
 	}
-
-	Logger.d("caseDataList", "MainPage!!!")
 
 	ConstraintLayout(
 		modifier = modifier
@@ -84,7 +92,7 @@ fun MainPage(modifier: Modifier = Modifier, mainPageViewModel: MainPageViewModel
 			.background(White)
 			.verticalScroll(rememberScrollState()),
 	) {
-		val ( tvHello, tvSoContent, clSipControl, bottomSpacer ) = createRefs()
+		val ( tvHello, tvSoContent, clSipControl ) = createRefs()
 
 		TextWithEndIcon(
 			text= "hello,AAA",
@@ -326,7 +334,6 @@ fun MainPage(modifier: Modifier = Modifier, mainPageViewModel: MainPageViewModel
 				.padding(vertical = 8.dp, horizontal = 16.dp)
 		) {
 			caseDataList.value?.forEach{
-				Logger.d("caseDataList", "${it.eventTitle}")
 				val roundColor = when(it.eventType){
 					0 -> C_FFFE7830
 					1 -> C_FFFFDD00
