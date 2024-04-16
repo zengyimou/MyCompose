@@ -1,5 +1,6 @@
 package com.mib.mycompose.ui.widget
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Switch
@@ -19,16 +21,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.mib.mycompose.R
-import com.mib.mycompose.ext.toast
 import com.mib.mycompose.ui.theme.C_111111
 import com.mib.mycompose.ui.theme.C_F86161
 import com.mib.mycompose.ui.theme.C_F8F8F8
@@ -270,6 +274,158 @@ fun MainPageTab(
 				width = Dimension.fillToConstraints
 			}.background(color = if(selectIndexState == 1) C_Main else Color.Transparent, shape = RoundedCornerShape(1.dp))
 				.height(2.dp)
+		)
+	}
+}
+
+
+@Preview
+@Composable
+fun TabContentItem(
+	modifier: Modifier = Modifier,
+	color: Color = Color.Blue,
+	title: String = "Case not",
+	caseNum: String = "12",
+	amount: String = "34",
+	itemClickListener: ()-> Unit = {}
+){
+	ConstraintLayout(
+		modifier = modifier.fillMaxWidth().border(
+			width = 1.dp,
+			shape = RoundedCornerShape(12.dp),
+			color = C_FFF1F1F1
+		)
+	) {
+		val ( spacerTop, ivRoundPoint, tvItemTitle, ivArrow, spacerLine,
+			tvCaseNum, tvCaseNumLab, tvOutstandingAmount, tvOutstandingAmountLabel ) = createRefs()
+
+		Spacer(
+			modifier = Modifier.constrainAs(spacerTop){
+				top.linkTo(parent.top)
+				start.linkTo(parent.start)
+				end.linkTo(parent.end)
+				width = Dimension.fillToConstraints
+			}.background(color = C_F8F8F8, shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+				.height(56.dp).clickable {
+
+				}
+		)
+
+		DrawCircle(modifier = Modifier
+			.constrainAs(ivRoundPoint) {
+				top.linkTo(spacerTop.top)
+				bottom.linkTo(spacerTop.bottom)
+				start.linkTo(parent.start, 16.dp)
+			}, color = color)
+
+		Text(
+			text = title,
+			fontSize = 14.sp,
+			color = C_111111,
+			fontWeight = FontWeight.Bold,
+			modifier = Modifier.constrainAs(tvItemTitle) {
+				start.linkTo(ivRoundPoint.end, 12.dp)
+				top.linkTo(ivRoundPoint.top)
+				end.linkTo(ivArrow.start, 12.dp)
+				bottom.linkTo(ivRoundPoint.bottom)
+				width = Dimension.fillToConstraints
+			}
+		)
+
+		Image(painter = painterResource(id = R.drawable.icon_arrow_right), contentDescription = null, modifier = Modifier
+			.constrainAs(ivArrow) {
+				top.linkTo(spacerTop.top)
+				bottom.linkTo(spacerTop.bottom)
+				end.linkTo(parent.end, 16.dp)
+			}
+			.width(16.dp)
+			.height(16.dp)
+		)
+
+		Spacer(
+			modifier = Modifier.constrainAs(spacerLine){
+				top.linkTo(spacerTop.bottom, 25.dp)
+				start.linkTo(parent.start)
+				end.linkTo(parent.end)
+				bottom.linkTo(parent.bottom, 25.dp)
+			}.background(color = C_FFF1F1F1)
+				.height(45.dp).width(1.dp)
+		)
+
+		val barrierBottom = createBottomBarrier(tvCaseNumLab, tvOutstandingAmountLabel)
+
+		Text(
+			text = "Case number",
+			fontSize = 12.sp,
+			color = FF999999,
+			modifier = Modifier.constrainAs(tvCaseNumLab) {
+				start.linkTo(parent.start, 16.dp)
+				top.linkTo(spacerTop.bottom, 16.dp)
+				end.linkTo(spacerLine.start, 16.dp)
+				width = Dimension.fillToConstraints
+			}
+		)
+
+		Text(
+			text = caseNum,
+			fontSize = 18.sp,
+			color = C_111111,
+			fontWeight = FontWeight.Bold,
+			modifier = Modifier.constrainAs(tvCaseNum) {
+				start.linkTo(tvCaseNumLab.start)
+				top.linkTo(barrierBottom, 8.dp)
+				end.linkTo(spacerLine.start, 16.dp)
+				bottom.linkTo(parent.bottom, 16.dp)
+				width = Dimension.fillToConstraints
+			}
+		)
+
+		Text(
+			text = "Outstanding amount",
+			fontSize = 12.sp,
+			color = FF999999,
+			modifier = Modifier.constrainAs(tvOutstandingAmountLabel) {
+				start.linkTo(spacerLine.end, 16.dp)
+				top.linkTo(spacerTop.bottom, 16.dp)
+				end.linkTo(parent.end, 16.dp)
+				width = Dimension.fillToConstraints
+			}
+		)
+
+		Text(
+			text = amount,
+			fontSize = 18.sp,
+			color = C_111111,
+			fontWeight = FontWeight.Bold,
+			modifier = Modifier.constrainAs(tvOutstandingAmount) {
+				start.linkTo(tvOutstandingAmountLabel.start)
+				top.linkTo(barrierBottom, 8.dp)
+				end.linkTo(parent.end, 16.dp)
+				bottom.linkTo(parent.bottom, 16.dp)
+				width = Dimension.fillToConstraints
+			}
+		)
+
+	}
+}
+
+@Preview
+@Composable
+fun DrawCircle(modifier: Modifier = Modifier, color: Color = Color.Blue,  canvasSize: Dp = 12.dp) {
+	Canvas(modifier = modifier.size(canvasSize)) {
+		// 定义圆的半径
+		val radius = size.minDimension / 2f
+
+		// 定义圆心的位置
+		val centerX = size.width / 2f
+		val centerY = size.height / 2f
+
+		// 绘制圆
+		drawCircle(
+			color = color, // 圆的颜色
+			radius = radius, // 圆的半径
+			center = Offset(centerX, centerY), // 圆心的位置
+//			style = Stroke(width = 5f) // 边框宽度
 		)
 	}
 }

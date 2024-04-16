@@ -299,12 +299,12 @@ fun TextWithEndIcon(
 
 @Composable
 fun TextWithStartIcon(
+	modifier: Modifier = Modifier,
 	text: String,
 	fontSize: TextUnit,
 	fontWeight: FontWeight = FontWeight.Normal,
 	res: Int,
 	color: Color,
-	modifier: Modifier = Modifier,
 	textModifier: Modifier = Modifier,
 ) {
 	Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {

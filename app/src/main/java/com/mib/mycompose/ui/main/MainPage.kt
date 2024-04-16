@@ -3,8 +3,11 @@ package com.mib.mycompose.ui.main
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -12,6 +15,7 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +38,9 @@ import com.mib.mycompose.ui.theme.C_1A18FFAD
 import com.mib.mycompose.ui.theme.C_1AFF6C1D
 import com.mib.mycompose.ui.theme.C_30B284
 import com.mib.mycompose.ui.theme.C_666666
+import com.mib.mycompose.ui.theme.C_FF1AC98B
+import com.mib.mycompose.ui.theme.C_FFFE7830
+import com.mib.mycompose.ui.theme.C_FFFFDD00
 import com.mib.mycompose.ui.theme.FF999999
 import com.mib.mycompose.ui.theme.White
 import com.mib.mycompose.ui.widget.CircleRing
@@ -41,6 +48,7 @@ import com.mib.mycompose.ui.widget.ClSipControl
 import com.mib.mycompose.ui.widget.InfoItem
 import com.mib.mycompose.ui.widget.MainPageColorItem
 import com.mib.mycompose.ui.widget.MainPageTab
+import com.mib.mycompose.ui.widget.TabContentItem
 import com.mib.mycompose.ui.widget.TextWithEndIcon
 import com.mib.mycompose.util.Logger
 
@@ -61,6 +69,13 @@ fun MainPage(modifier: Modifier = Modifier, mainPageViewModel: MainPageViewModel
 	var switchIsCheck by remember { mutableStateOf(false) }
 
 	val context = LocalContext.current
+
+	val caseDataList = mainPageViewModel.caseDataList.observeAsState()
+	LaunchedEffect(Unit){
+		mainPageViewModel.initCaseDataList()
+	}
+
+	Logger.d("caseDataList", "MainPage!!!")
 
 	ConstraintLayout(
 		modifier = modifier
@@ -293,7 +308,6 @@ fun MainPage(modifier: Modifier = Modifier, mainPageViewModel: MainPageViewModel
 					width = Dimension.fillToConstraints
 				}
 		)
-		val caseDataList = mainPageViewModel.caseDataList.observeAsState()
 		MainPageTab(modifier =  Modifier.constrainAs(tabContent){
 			top.linkTo(tvCaseData.bottom, 16.dp)
 			start.linkTo(parent.start, 16.dp)
@@ -303,16 +317,33 @@ fun MainPage(modifier: Modifier = Modifier, mainPageViewModel: MainPageViewModel
 			mainPageViewModel.clickMainPageTab(index = selectIndex)
 		}
 		Column(
-			modifier = Modifier.constrainAs(columnCaseData){
-				top.linkTo(tabContent.bottom, 16.dp)
-				start.linkTo(parent.start, 16.dp)
-				end.linkTo(parent.end, 16.dp)
-			}
+			modifier = Modifier
+				.constrainAs(columnCaseData) {
+					top.linkTo(tabContent.bottom, 16.dp)
+					start.linkTo(parent.start, 16.dp)
+					end.linkTo(parent.end, 16.dp)
+				}
+				.padding(vertical = 8.dp, horizontal = 16.dp)
 		) {
 			caseDataList.value?.forEach{
-				Text(text = it.eventTitle?: "")
+				Logger.d("caseDataList", "${it.eventTitle}")
+				val roundColor = when(it.eventType){
+					0 -> C_FFFE7830
+					1 -> C_FFFFDD00
+					2 -> C_FF1AC98B
+					else -> C_FFFE7830
+				}
+				TabContentItem(
+					title = it.eventTitle?: "",
+					caseNum = it.caseNum?: "",
+					amount = it.amount?: "",
+					color = roundColor
+				){
+
+				}
+				Spacer(modifier = Modifier.height(16.dp))
 			}
 		}
-
 	}
+
 }

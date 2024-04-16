@@ -13,6 +13,13 @@ class MainPageViewModel: BaseViewModel(){
 
 	var caseDataList = MutableLiveData<List<CaseData>>()
 
+	fun initCaseDataList(){
+		val list1 = mutableListOf<CaseData>()
+		list1.add(CaseData("A123456789", "123456789", 0, "A123456789"))
+		list1.add(CaseData("B123456789", "123456789", 1, "B123456789"))
+		caseDataList.value = list1
+	}
+
 	fun clickMainPageTab(index: Int) {
 		val list1 = mutableListOf<CaseData>()
 		val list2 = mutableListOf<CaseData>()
@@ -21,8 +28,8 @@ class MainPageViewModel: BaseViewModel(){
 			list1.add(CaseData("B123456789", "123456789", 1, "B123456789"))
 			caseDataList.value = list1
 		}else{
-			list2.add(CaseData("C123456789", "123456789", 0, "C123456789"))
-			list2.add(CaseData("D123456789", "123456789", 1, "D123456789"))
+			list2.add(CaseData("C123456789", "123456789", 1, "C123456789"))
+			list2.add(CaseData("D123456789", "123456789", 2, "D123456789"))
 			caseDataList.value = list2
 		}
 	}
