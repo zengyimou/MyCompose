@@ -1,13 +1,16 @@
 package com.mib.mycompose.ui.widget
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absolutePadding
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -50,7 +54,10 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.mib.mycompose.R
+import com.mib.mycompose.ext.toast
 import com.mib.mycompose.ui.main.CaseData
+import com.mib.mycompose.ui.theme.C_Black_50
+import com.mib.mycompose.ui.theme.C_Main
 import com.mib.mycompose.ui.theme.editTextHintStyle
 
 /**
@@ -339,4 +346,24 @@ fun CaseDataTabContent(modifier: Modifier = Modifier,
 		}
 	}
 
+}
+
+@Composable
+fun MainBackHandler(){
+	val context = LocalContext.current
+	BackHandler(enabled = true) {
+		context.toast("当前为主页，不能返回")
+	}
+}
+
+
+@Preview
+@Composable
+fun CircularProgressIndicator(isShow: Boolean = false){
+	if(isShow){
+		Column( modifier = Modifier.fillMaxWidth().fillMaxHeight().background(color = C_Black_50), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center){
+			androidx.compose.material.CircularProgressIndicator(modifier = Modifier.padding(16.dp), color = C_Main)
+
+		}
+	}
 }

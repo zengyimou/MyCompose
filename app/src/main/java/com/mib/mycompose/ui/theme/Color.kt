@@ -31,3 +31,5 @@ val C_FFF1F1F1 = Color(0xFFF1F1F1)
 val C_FFFE7830 = Color(0xFFFE7830)
 val C_FFFFDD00 = Color(0xFFFFDD00)
 val C_FF1AC98B = Color(0xFF1AC98B)
+
+val C_Black_50 = Color(0x80000000)

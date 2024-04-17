@@ -1,4 +1,4 @@
-package com.mib.mycompose.ui.main
+package com.mib.mycompose.ui.contact
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -11,7 +11,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.mib.mycompose.ext.toast
-import com.mib.mycompose.ui.theme.FF999999
+import com.mib.mycompose.ui.theme.White
+import com.mib.mycompose.ui.widget.MainBackHandler
 
 /**
  *  author : cengyimou
@@ -19,17 +20,14 @@ import com.mib.mycompose.ui.theme.FF999999
  *  description :
  */
 @Composable
-fun CasePage(modifier: Modifier = Modifier, navHostController: NavHostController = rememberNavController(),){
+fun ContactPage(modifier: Modifier = Modifier, navHostController: NavHostController = rememberNavController(),){
 	ConstraintLayout(
 		modifier = Modifier
 			.fillMaxWidth()
 			.fillMaxHeight()
-			.background(FF999999),
+			.background(White),
 	) {
 
 	}
-	val context = LocalContext.current
-	BackHandler(enabled = true) {
-		context.toast("当前为主页，不能返回")
-	}
+	MainBackHandler()
 }

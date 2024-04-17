@@ -1,6 +1,5 @@
 package com.mib.mycompose.ui.widget
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -13,7 +12,6 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,13 +37,12 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mib.mycompose.R
 import com.mib.mycompose.constants.Scene
 import com.mib.mycompose.constants.Scene.LOGIN_PAGE
-import com.mib.mycompose.ext.toast
 import com.mib.mycompose.manager.UserInfoManager
 import com.mib.mycompose.ui.login.LoginComponent
-import com.mib.mycompose.ui.main.CasePage
-import com.mib.mycompose.ui.main.ContactPage
+import com.mib.mycompose.ui.case.CasePage
+import com.mib.mycompose.ui.contact.ContactPage
 import com.mib.mycompose.ui.main.MainPage
-import com.mib.mycompose.ui.main.MePage
+import com.mib.mycompose.ui.me.MePage
 import com.mib.mycompose.ui.main.NavTabScreen
 import com.mib.mycompose.ui.theme.C_30B284
 import com.mib.mycompose.ui.theme.C_Main
