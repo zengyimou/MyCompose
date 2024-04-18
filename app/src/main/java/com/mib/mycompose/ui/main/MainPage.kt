@@ -50,7 +50,6 @@ import com.mib.mycompose.ui.widget.ClSipControl
 import com.mib.mycompose.ui.widget.InfoItem
 import com.mib.mycompose.ui.widget.MainPageColorItem
 import com.mib.mycompose.ui.widget.MainPageTab
-import com.mib.mycompose.ui.widget.NavScreen
 import com.mib.mycompose.ui.widget.TabContentItem
 import com.mib.mycompose.ui.widget.TextWithEndIcon
 import com.mib.mycompose.util.Logger
@@ -65,7 +64,7 @@ import com.mib.mycompose.util.Logger
 fun MainPage(
 	modifier: Modifier = Modifier,
 	navHostController: NavHostController = rememberNavController(),
-	mainPageViewModel: MainPageViewModel= viewModel()
+	mainPageViewModel: MainPageViewModel = viewModel()
 ){
 	val TAG = "MainPage"
 	Logger.d(TAG,"MainPage ${mainPageViewModel.hashCode()}")

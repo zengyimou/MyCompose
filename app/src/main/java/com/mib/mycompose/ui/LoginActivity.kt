@@ -3,8 +3,12 @@ package com.mib.mycompose.ui
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import com.jeremyliao.liveeventbus.LiveEventBus
 import com.mib.mycompose.base.BaseActivity
+import com.mib.mycompose.event.Event
+import com.mib.mycompose.event.LogoutEvent
 import com.mib.mycompose.ui.widget.DisneyMainScreen
+import com.mib.mycompose.ui.widget.NavScreen
 import com.mib.mycompose.viewmodel.BaseViewModel
 import com.mib.mycompose.viewmodel.MainViewModel
 
@@ -24,7 +28,7 @@ class LoginActivity : BaseActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContent {
-			DisneyMainScreen(mainViewModel)
+			DisneyMainScreen(this, mainViewModel)
 		}
 	}
 

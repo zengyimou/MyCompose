@@ -5,7 +5,9 @@ import com.jeremyliao.liveeventbus.core.LiveEventBusCore
 import com.mib.mycompose.R
 import com.mib.mycompose.event.Event
 import com.mib.mycompose.event.LogoutEvent
+import com.mib.mycompose.model.CaseListData
 import com.mib.mycompose.model.LoginData
+import com.mib.mycompose.request.CaseListRequest
 import com.mib.mycompose.request.LoginRequest
 import com.mib.mycompose.retrofit.RetrofitFactory
 import com.mib.mycompose.util.ToastUtils
@@ -61,6 +63,15 @@ object RequestHolder {
 				)
 			)
 		)
+	}
+
+	suspend fun getCaseList(pageNo: Int, pageSize: Int): BaseResponse<CaseListData>{
+		//请求参数
+		val request = CaseListRequest().apply {
+			this.pageNo = pageNo
+			this.pageSize = pageSize
+		}
+		return tokenCheck(api.getCaseList(request))
 	}
 
 

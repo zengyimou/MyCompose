@@ -1,5 +1,6 @@
 package com.mib.mycompose.ui.widget
 
+import android.app.Activity
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -28,15 +29,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.jeremyliao.liveeventbus.LiveEventBus
 import com.mib.mycompose.R
 import com.mib.mycompose.constants.Scene
 import com.mib.mycompose.constants.Scene.LOGIN_PAGE
+import com.mib.mycompose.event.Event
+import com.mib.mycompose.event.LogoutEvent
 import com.mib.mycompose.manager.UserInfoManager
 import com.mib.mycompose.ui.login.LoginComponent
 import com.mib.mycompose.ui.case.CasePage
@@ -57,7 +62,7 @@ import com.mib.mycompose.viewmodel.MainViewModel
  *  description :
  */
 @Composable
-fun DisneyMainScreen(mainViewModel: MainViewModel) {
+fun DisneyMainScreen(lifecycleOwner: LifecycleOwner, mainViewModel: MainViewModel) {
 	val navController = rememberNavController()
 
 	val colors = MaterialTheme.colors
@@ -74,6 +79,15 @@ fun DisneyMainScreen(mainViewModel: MainViewModel) {
 		targetValue = navigationBarColor,
 		animationSpec = tween()
 	)
+
+	//监听登陆过期事件
+	LiveEventBus.get<LogoutEvent>(Event.EVENT_LOGOUT).observe(lifecycleOwner){
+		//回退到登陆页面，并推出其他页面
+		navController.navigate(route = NavScreen.Login.route){
+			popUpTo(route = NavScreen.Login.route) { inclusive = true }
+		}
+		UserInfoManager.logout()
+	}
 	//tab数组
 	val tabs = listOf(NavScreen.TabMain, NavScreen.TabCase, NavScreen.TabContact, NavScreen.TabMe)
 
@@ -104,7 +118,7 @@ fun DisneyMainScreen(mainViewModel: MainViewModel) {
 //				}
 //			}
 
-			composable(route = NavTabScreen.Main.route) {
+			composable(route = NavScreen.TabMain.route) {
 				MainPage(modifier = modifier, navHostController = navController)
 
 				LaunchedEffect(Unit) {
@@ -112,13 +126,13 @@ fun DisneyMainScreen(mainViewModel: MainViewModel) {
 					navigationBarColor = C_Main
 				}
 			}
-			composable(route = NavTabScreen.Case.route) {
+			composable(route = NavScreen.TabCase.route) {
 				CasePage(modifier = modifier, navHostController = navController)
 			}
-			composable(route = NavTabScreen.Contact.route) {
+			composable(route = NavScreen.TabContact.route) {
 				ContactPage(modifier = modifier, navHostController = navController)
 			}
-			composable(route = NavTabScreen.Me.route) {
+			composable(route = NavScreen.TabMe.route) {
 				MePage(modifier = modifier, navHostController = navController)
 			}
 		}
@@ -194,11 +208,11 @@ fun BottomBar(navController: NavController, tabs: List<NavScreen>){
 					onClick = {
 						selectItem = index
 						val route = when (selectItem) {
-							0 -> NavTabScreen.Main.route
-							1 -> NavTabScreen.Case.route
-							2 -> NavTabScreen.Contact.route
-							3 -> NavTabScreen.Me.route
-							else -> NavTabScreen.Main.route
+							0 -> NavScreen.TabMain.route
+							1 -> NavScreen.TabCase.route
+							2 -> NavScreen.TabContact.route
+							3 -> NavScreen.TabMe.route
+							else -> NavScreen.TabMain.route
 						}
 						navController.navigate(route){
 							popUpTo(navController.graph.startDestinationId) {

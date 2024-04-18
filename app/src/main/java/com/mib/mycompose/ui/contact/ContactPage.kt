@@ -22,7 +22,7 @@ import com.mib.mycompose.ui.widget.MainBackHandler
 @Composable
 fun ContactPage(modifier: Modifier = Modifier, navHostController: NavHostController = rememberNavController(),){
 	ConstraintLayout(
-		modifier = Modifier
+		modifier = modifier
 			.fillMaxWidth()
 			.fillMaxHeight()
 			.background(White),

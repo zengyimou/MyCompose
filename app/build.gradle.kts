@@ -81,6 +81,12 @@ dependencies {
 	implementation("androidx.compose.runtime:runtime-livedata:$composeVersion")
 	implementation("androidx.compose.ui:ui-tooling:$composeVersion")
 
+	// 下拉刷新
+	implementation("com.google.accompanist:accompanist-swiperefresh:0.21.2-beta")
+	//Paging 3.0
+	implementation("androidx.paging:paging-compose:3.2.1")
+	implementation("androidx.paging:paging-runtime-ktx:3.2.1")
+
 	implementation("com.google.accompanist:accompanist-systemuicontroller:0.28.0")
 
 	api("com.squareup.okhttp3:okhttp:4.10.0")
