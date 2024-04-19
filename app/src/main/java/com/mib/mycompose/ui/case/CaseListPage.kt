@@ -40,9 +40,15 @@ import com.mib.mycompose.event.Event
 import com.mib.mycompose.event.LogoutEvent
 import com.mib.mycompose.ext.toast
 import com.mib.mycompose.model.NewCaseListItem
+import com.mib.mycompose.ui.theme.C_E7FFE6
+import com.mib.mycompose.ui.theme.C_F6F6F6
 import com.mib.mycompose.ui.theme.C_FF000000
 import com.mib.mycompose.ui.theme.C_Main
 import com.mib.mycompose.ui.widget.DropDownTab
+import com.mib.mycompose.ui.widget.ErrorContent
+import com.mib.mycompose.ui.widget.LoadingItem
+import com.mib.mycompose.ui.widget.NoMoreDataFindItem
+import com.mib.mycompose.ui.widget.TaskListItem
 import com.mib.mycompose.util.Logger
 
 /**
@@ -62,13 +68,14 @@ fun CaseListPage(
 	var intentionalSelectState by rememberSaveable { mutableStateOf(false) }
 	var caseTypeSelectState by rememberSaveable { mutableStateOf(false) }
 
+	/** 列表数据*/
 	val caseListLiveData = caseListViewModel.caseList.observeAsState(listOf<NewCaseListItem>())
 
 	val lazyListState = rememberLazyListState()
 	val coroutineScope = rememberCoroutineScope()
 
-	var firstInit by rememberSaveable { mutableStateOf(true)}
-	val context = LocalContext.current
+	/** 是否第一次加载*/
+	var firstInit by rememberSaveable { mutableStateOf(true) }
 
 	/** 下拉刷新*/
 	val isRefreshing = caseListViewModel.isRefreshing.observeAsState()
@@ -77,13 +84,13 @@ fun CaseListPage(
 	/** 分页*/
 	val noMoreData = caseListViewModel.noMoreData.observeAsState()
 
-	LaunchedEffect(Unit){
-		if(firstInit){
+	LaunchedEffect(Unit) {
+		if (firstInit) {
 			caseListViewModel.getCaseList(isRefresh = true)
 			firstInit = false
 		}
 	}
-	
+
 	Column(
 		modifier = modifier
 			.fillMaxWidth()
@@ -143,31 +150,27 @@ fun CaseListPage(
 				state = lazyListState,
 				modifier = Modifier
 					.fillMaxWidth()
-					.fillMaxHeight(),
+					.fillMaxHeight()
+					.background(color = C_F6F6F6),
 			) {
 				itemsIndexed(items = caseListLiveData.value) { index, item ->
-					Text(
-						modifier = Modifier.height(100.dp),
-						text = "text $index",
-						fontSize = 14.sp,
-						color = C_FF000000,
-					)
+					TaskListItem(
+						modifier = Modifier.padding(top = 10.dp),
+						item = item
+					) {
+						//点击事件
+					}
 				}
-				if(noMoreData.value == false){
-					item {
-						CircularProgressIndicator(modifier = Modifier.padding(16.dp), color = C_Main)
+				item {
+					if (noMoreData.value == false) {
+						LoadingItem()
 						LaunchedEffect(Unit) {
 							caseListViewModel.getCaseList(isRefresh = false)
 						}
-					}
-				}else {
-					item {
-						Text(
-							modifier = Modifier.height(20.dp).fillMaxWidth(),
-							text = "No More Data",
-							fontSize = 14.sp,
-							color = C_FF000000,
-						)
+					} else if (caseListLiveData.value.isEmpty()) {
+						ErrorContent { }
+					} else {
+						NoMoreDataFindItem()
 					}
 				}
 			}

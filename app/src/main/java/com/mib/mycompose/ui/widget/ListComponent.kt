@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -156,24 +158,9 @@ fun ErrorMoreRetryItem(retry: () -> Unit) {
 }
 
 @Composable
-fun NoMoreDataFindItem(onClick: () -> Unit) {
-	Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-		TextButton(
-			onClick = { onClick() },
-			modifier = Modifier
-				.padding(20.dp)
-				.width(80.dp)
-				.height(30.dp),
-			shape = RoundedCornerShape(6.dp),
-			contentPadding = PaddingValues(3.dp),
-			colors = textButtonColors(backgroundColor = gray300),
-			elevation = elevation(
-				defaultElevation = 2.dp,
-				pressedElevation = 4.dp,
-			),
-		) {
-			Text(text = "已经没有更多数据啦 ~~ Click to top", color = gray600)
-		}
+fun NoMoreDataFindItem(onClick: () -> Unit= {}) {
+	Box(modifier = Modifier.fillMaxWidth().padding(16.dp), contentAlignment = Alignment.Center) {
+		Text(text = "已经没有更多数据啦 ~~ Click to top", color = gray600)
 	}
 }
 
@@ -195,7 +182,7 @@ fun ErrorContent(retry: () -> Unit) {
 			painter = painterResource(id = R.drawable.icon_empty),
 			contentDescription = null
 		)
-		Text(text = "请求失败，请检查网络", modifier = Modifier.padding(8.dp))
+		Text(text = "No Data", modifier = Modifier.padding(8.dp))
 		TextButton(
 			onClick = { retry() },
 			modifier = Modifier
