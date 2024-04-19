@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.mib.mycompose.R
+import com.mib.mycompose.model.NewCaseListItem
 import com.mib.mycompose.ui.theme.C_FF000000
 import com.mib.mycompose.ui.theme.C_Main
 import com.mib.mycompose.ui.theme.White
@@ -34,12 +35,13 @@ fun DropDownTab(
 	modifier: Modifier = Modifier,
 	tabText: String = "tabasd",
 	isSelected: Boolean = false,
-	onClick: ()-> Unit = {},
+	onClick: () -> Unit = {},
 ) {
 	ConstraintLayout(
 		modifier = modifier
 			.heightIn(44.dp, 64.dp)
-			.background(White).clickable {
+			.background(White)
+			.clickable {
 				onClick.invoke()
 			},
 	) {
@@ -50,7 +52,7 @@ fun DropDownTab(
 		Text(
 			text = tabText,
 			fontSize = 14.sp,
-			color = if(isSelected) C_Main else C_FF000000,
+			color = if (isSelected) C_Main else C_FF000000,
 			modifier = Modifier.constrainAs(tvTab) {
 				start.linkTo(parent.start, 12.dp)
 				top.linkTo(parent.top)
@@ -76,5 +78,40 @@ fun DropDownTab(
 				},
 		)
 	}
+
+}
+
+/**
+ *
+ * @param modifier Modifier
+ * @param newCaseListItem NewCaseListItem?
+ * @param onClick Function0<Unit>
+ */
+@Preview
+@Composable
+fun TaskListItem(
+	modifier: Modifier = Modifier,
+	newCaseListItem: NewCaseListItem? = null,
+	onClick: () -> Unit = {},
+) {
+	ConstraintLayout(
+		modifier = modifier
+			.heightIn(44.dp, 64.dp)
+			.background(White)
+			.clickable {
+				onClick.invoke()
+			},
+	) {
+		val (tvCustomerName, tvCallBackTime, tvDueAmount, tvDueAmountLab,
+			vLine, tvRepaymentAmount, tvRepaymentAmountLab, flowLayout) = createRefs()
+	}
+}
+
+@Preview
+@Composable
+fun FlowTagItem(
+	modifier: Modifier = Modifier,
+	text: String? = "tag"
+){
 
 }

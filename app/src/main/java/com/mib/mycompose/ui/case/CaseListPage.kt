@@ -8,16 +8,19 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -32,6 +35,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.jeremyliao.liveeventbus.LiveEventBus
+import com.mib.mycompose.event.Event
+import com.mib.mycompose.event.LogoutEvent
 import com.mib.mycompose.ext.toast
 import com.mib.mycompose.model.NewCaseListItem
 import com.mib.mycompose.ui.theme.C_FF000000
@@ -63,6 +69,13 @@ fun CaseListPage(
 
 	var firstInit by rememberSaveable { mutableStateOf(true)}
 	val context = LocalContext.current
+
+	/** 下拉刷新*/
+	val isRefreshing = caseListViewModel.isRefreshing.observeAsState()
+	val rememberSwipeRefreshState = rememberSwipeRefreshState(isRefreshing = false)
+	rememberSwipeRefreshState.isRefreshing = isRefreshing.value == true
+	/** 分页*/
+	val noMoreData = caseListViewModel.noMoreData.observeAsState()
 
 	LaunchedEffect(Unit){
 		if(firstInit){
@@ -115,7 +128,6 @@ fun CaseListPage(
 			}
 
 		}
-		val rememberSwipeRefreshState = rememberSwipeRefreshState(isRefreshing = false)
 
 		SwipeRefresh(
 			modifier = Modifier
@@ -123,7 +135,9 @@ fun CaseListPage(
 				.fillMaxHeight()
 				.background(color = Color.White),
 			state = rememberSwipeRefreshState,
-			onRefresh = { context.toast("refresh") }
+			onRefresh = {
+				caseListViewModel.getCaseList(isRefresh = true)
+			}
 		) {
 			LazyColumn(
 				state = lazyListState,
@@ -134,10 +148,27 @@ fun CaseListPage(
 				itemsIndexed(items = caseListLiveData.value) { index, item ->
 					Text(
 						modifier = Modifier.height(100.dp),
-						text = "text ",
+						text = "text $index",
 						fontSize = 14.sp,
 						color = C_FF000000,
 					)
+				}
+				if(noMoreData.value == false){
+					item {
+						CircularProgressIndicator(modifier = Modifier.padding(16.dp), color = C_Main)
+						LaunchedEffect(Unit) {
+							caseListViewModel.getCaseList(isRefresh = false)
+						}
+					}
+				}else {
+					item {
+						Text(
+							modifier = Modifier.height(20.dp).fillMaxWidth(),
+							text = "No More Data",
+							fontSize = 14.sp,
+							color = C_FF000000,
+						)
+					}
 				}
 			}
 		}

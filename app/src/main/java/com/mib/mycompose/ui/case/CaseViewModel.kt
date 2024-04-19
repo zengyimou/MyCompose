@@ -14,6 +14,7 @@ import com.mib.mycompose.model.NewCaseListItem
 import com.mib.mycompose.net.RequestHolder
 import com.mib.mycompose.net.ResponseState
 import com.mib.mycompose.ui.case.CaseViewModel.Companion.TAG
+import com.mib.mycompose.util.Logger
 import com.mib.mycompose.viewmodel.BaseViewModel
 
 /**
@@ -27,10 +28,17 @@ class CaseViewModel : BaseViewModel() {
 	/** 当前请求页数*/
 	var pageNo = 0
 
-	var noMoreData = false
+	var noMoreData = MutableLiveData<Boolean>()
 		private set
 
+	var isRefreshing = MutableLiveData<Boolean>()
+
+	var isRequestNow = false
+
 	fun getCaseList(isRefresh: Boolean) {
+		if(isRequestNow) return
+		isRequestNow = true
+		if(isRefresh) isRefreshing.value = true
 		pageNo = if (isRefresh) 0 else {
 			pageNo + 1
 		}
@@ -42,12 +50,31 @@ class CaseViewModel : BaseViewModel() {
 		}, onSuccess = {
 			this@CaseViewModel.pageNo = it?.pageNo?: 0
 			val taskList = it?.caseList
-			noMoreData =
+			noMoreData.value =
 				taskList.isNullOrEmpty() || taskList.size < Constants.PAGE_GROUP_SIZE
-			caseList.value = NewCaseGroupListItem.makeCaseGroupList(taskList)
+
+			val newList = NewCaseGroupListItem.makeCaseGroupList(taskList)
+			val currentList = caseList.value
+			caseList.value = if(isRefresh){
+				Logger.d("getCaseList", "new size ${newList.size}")
+				newList
+			} else {
+				val finalList = mutableListOf<NewCaseListItem>()
+				finalList.apply {
+					addAll(currentList?.toMutableList()?: mutableListOf())
+					addAll(newList)
+				}
+
+				Logger.d("getCaseList", "final size ${finalList?.size}")
+				finalList
+			}
 		}, onError = {
 			caseList.value = mutableListOf()
 			responseStateLiveData.value = ResponseState.TYPE_UNKNOWN
+			false
+		}, onComplete = {
+			isRefreshing.value = false
+			isRequestNow = false
 			false
 		})
 	}
