@@ -5,7 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.currentRecomposeScope
+import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavHostController
@@ -20,14 +23,17 @@ import com.mib.mycompose.ui.widget.MainBackHandler
  *  description :
  */
 @Composable
-fun MePage(modifier: Modifier = Modifier, navHostController: NavHostController = rememberNavController(),){
+fun MePage(modifier: Modifier = Modifier, navHostController: NavHostController = rememberNavController()) {
 	ConstraintLayout(
 		modifier = Modifier
 			.fillMaxWidth()
 			.fillMaxHeight()
-			.background(FF999999),
+			.background(Color.White),
 	) {
+		val recompose = currentRecomposeScope
+		recompose.invalidate()
 
+		Snapshot.takeSnapshot()
 	}
 	MainBackHandler()
 }

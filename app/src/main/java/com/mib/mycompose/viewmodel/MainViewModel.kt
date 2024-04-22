@@ -32,5 +32,9 @@ class MainViewModel : BaseViewModel(){
 		)
 	}
 
+	val resetBottomBarSelectIndexLiveData = MutableLiveData<Boolean>()
+	fun resetBottomBarSelectIndex(enable: Boolean){
+		resetBottomBarSelectIndexLiveData.value = enable
+	}
 
 }

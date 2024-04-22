@@ -16,6 +16,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -82,6 +83,7 @@ fun DisneyMainScreen(lifecycleOwner: LifecycleOwner, mainViewModel: MainViewMode
 
 	//监听登陆过期事件
 	LiveEventBus.get<LogoutEvent>(Event.EVENT_LOGOUT).observe(lifecycleOwner){
+		mainViewModel.resetBottomBarSelectIndex(true)
 		//回退到登陆页面，并推出其他页面
 		navController.navigate(route = NavScreen.Login.route){
 			popUpTo(route = NavScreen.Login.route) { inclusive = true }
@@ -92,7 +94,9 @@ fun DisneyMainScreen(lifecycleOwner: LifecycleOwner, mainViewModel: MainViewMode
 	val tabs = listOf(NavScreen.TabMain, NavScreen.TabCase, NavScreen.TabContact, NavScreen.TabMe)
 
 	Scaffold(
-		bottomBar = { BottomBar(navController = navController, tabs) }
+		bottomBar = {
+			BottomBar(navController = navController, tabs, mainViewModel)
+		}
 	){ innerPadding ->
 		val modifier = Modifier.padding(innerPadding)
 		//初始页面
@@ -145,13 +149,20 @@ fun DisneyMainScreen(lifecycleOwner: LifecycleOwner, mainViewModel: MainViewMode
 }
 
 @Composable
-fun BottomBar(navController: NavController, tabs: List<NavScreen>){
+fun BottomBar(navController: NavController, tabs: List<NavScreen>, mainViewModel: MainViewModel){
 	val navBackStackEntry by navController.currentBackStackEntryAsState()
 	val currentRoute = navBackStackEntry?.destination?.route
 		?: NavScreen.TabMain.route
 	val routes = remember { tabs.map { it.route } }
 
 	var selectItem by remember { mutableIntStateOf(0) }
+
+	/** 重新登陆需要重置selectItem选中第一个tab*/
+	val isResetSelectItem = mainViewModel.resetBottomBarSelectIndexLiveData.observeAsState()
+	if(isResetSelectItem.value == true){
+		selectItem = 0
+		mainViewModel.resetBottomBarSelectIndex(enable = false)
+	}
 	val context = LocalContext.current
 	val tabItemsStr = listOf(
 		context.getString(R.string.tab_main),
@@ -182,7 +193,9 @@ fun BottomBar(navController: NavController, tabs: List<NavScreen>){
 	if (currentRoute in routes) {
 		BottomNavigation(
 			backgroundColor = White,
-			modifier = Modifier.height(64.dp).navigationBarsPadding()
+			modifier = Modifier
+				.height(64.dp)
+				.navigationBarsPadding()
 		) {
 			tabs.forEachIndexed { index, item ->
 				BottomNavigationItem(

@@ -168,7 +168,11 @@ fun CaseListPage(
 							caseListViewModel.getCaseList(isRefresh = false)
 						}
 					} else if (caseListLiveData.value.isEmpty()) {
-						ErrorContent { }
+						ErrorContent {
+//							LiveEventBus.get<LogoutEvent>(Event.EVENT_LOGOUT).post(LogoutEvent())
+							//重新请求第一页
+							caseListViewModel.getCaseList(isRefresh = true)
+						}
 					} else {
 						NoMoreDataFindItem()
 					}
