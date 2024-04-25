@@ -45,6 +45,7 @@ import com.mib.mycompose.event.Event
 import com.mib.mycompose.event.LogoutEvent
 import com.mib.mycompose.ext.toast
 import com.mib.mycompose.manager.UserInfoManager
+import com.mib.mycompose.model.LoginData
 import com.mib.mycompose.ui.theme.C_111111
 import com.mib.mycompose.ui.theme.C_222222
 import com.mib.mycompose.ui.theme.C_5AEA58
@@ -53,6 +54,7 @@ import com.mib.mycompose.ui.theme.FF999999
 import com.mib.mycompose.ui.widget.DrawCircle
 import com.mib.mycompose.ui.widget.MainBackHandler
 import com.mib.mycompose.ui.widget.SettingItem
+import com.mib.mycompose.util.Logger
 import kotlinx.coroutines.launch
 
 /**
@@ -73,6 +75,7 @@ fun MePage(modifier: Modifier = Modifier, navHostController: NavHostController =
 //		val recompose = currentRecomposeScope
 //		recompose.invalidate()
 //		Snapshot.takeSnapshot()
+
 		val (ivHeader, tvName, tvId, ivRoundPoint, tvSipStatus,
 			settingNetwork, settingUpload, settingCallLog, settingChangePwd, settingWhatsapp, settingSms,
 			settingReminder, tvVersion, btnLogout) = createRefs()
@@ -221,6 +224,8 @@ fun MePage(modifier: Modifier = Modifier, navHostController: NavHostController =
 				Text(text = "Logout", color = colorResource(id = R.color.white))
 			}
 		}
+
+		/** 二次确认弹窗*/
 		if(showDialog){
 			AlertDialog(
 				title = { Text(text = "Are you sure logout?") },

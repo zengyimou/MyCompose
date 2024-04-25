@@ -6,6 +6,7 @@ import com.mib.mycompose.R
 import com.mib.mycompose.event.Event
 import com.mib.mycompose.event.LogoutEvent
 import com.mib.mycompose.model.CaseListData
+import com.mib.mycompose.model.EmployeeInfoData
 import com.mib.mycompose.model.LoginData
 import com.mib.mycompose.request.CaseListRequest
 import com.mib.mycompose.request.LoginRequest
@@ -62,6 +63,15 @@ object RequestHolder {
 					password
 				)
 			)
+		)
+	}
+
+	/**
+	 * 获取催收员信息
+	 */
+	suspend fun getEmployeeInfo(): BaseResponse<EmployeeInfoData> {
+		return tokenCheck(
+			api.getEmployeeInfo(mutableMapOf())
 		)
 	}
 

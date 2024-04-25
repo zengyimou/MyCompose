@@ -1,11 +1,14 @@
 package com.mib.mycompose.net
 
 import com.mib.mycompose.model.CaseListData
+import com.mib.mycompose.model.EmployeeInfoData
 import com.mib.mycompose.model.LoginData
 import com.mib.mycompose.request.CaseListRequest
 import com.mib.mycompose.request.LoginRequest
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.QueryMap
 
 /**
  *  author : cengyimou
@@ -19,6 +22,9 @@ interface Api {
 	@POST("user/login")
 	suspend fun login(@Body request: LoginRequest): BaseResponse<LoginData>
 
+
+	@GET("user/user-info")
+	suspend fun getEmployeeInfo(@QueryMap request: Map<String, String>): BaseResponse<EmployeeInfoData>
 	/**
 	 * 获取案件列表
 	 */

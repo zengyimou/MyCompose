@@ -367,3 +367,13 @@ fun CircularProgressIndicator(isShow: Boolean = false){
 		}
 	}
 }
+
+@Composable
+fun WrapperConstraintLayout(modifier: Modifier, content: @Composable () -> Unit){
+	ConstraintLayout(
+		modifier = modifier
+	){
+		content()
+	}
+}
+
