@@ -8,6 +8,8 @@ import com.mib.mycompose.event.LogoutEvent
 import com.mib.mycompose.model.CaseListData
 import com.mib.mycompose.model.EmployeeInfoData
 import com.mib.mycompose.model.LoginData
+import com.mib.mycompose.model.MainPageData
+import com.mib.mycompose.model.PerformanceData
 import com.mib.mycompose.request.CaseListRequest
 import com.mib.mycompose.request.LoginRequest
 import com.mib.mycompose.retrofit.RetrofitFactory
@@ -82,6 +84,22 @@ object RequestHolder {
 			this.pageSize = pageSize
 		}
 		return tokenCheck(api.getCaseList(request))
+	}
+
+	/**
+	 * 首页绩效数据
+	 * @return BaseResponse<PerformanceData>
+	 */
+	suspend fun getPerformanceInfo(): BaseResponse<PerformanceData> {
+		return tokenCheck(api.getEmployeePerformance())
+	}
+
+	/**
+	 * 首页案件统计数据
+	 * @return BaseResponse<MainPageData>
+	 */
+	suspend fun getCaseStatistic(): BaseResponse<MainPageData> {
+		return tokenCheck(api.getCaseStatistic())
 	}
 
 

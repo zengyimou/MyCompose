@@ -115,9 +115,10 @@ fun BasicTextFieldWithHint(
 	modifier: Modifier? = Modifier
 		.fillMaxWidth()
 		.padding(16.dp),
-	isPassword: Boolean = false
+	isPassword: Boolean = false,
+	defaultText: String = "",
 ) {
-	var text by remember { mutableStateOf("") }
+	var text by remember { mutableStateOf(defaultText) }
 	var isShowIcon by remember { mutableStateOf(isPassword) }
 	var isShowEditContext by remember { mutableStateOf(isShowIcon) }
 	Box(

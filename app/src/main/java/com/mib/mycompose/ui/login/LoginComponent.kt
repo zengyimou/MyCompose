@@ -16,6 +16,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -34,6 +38,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.mib.mycompose.R
+import com.mib.mycompose.constants.C.LINK_TAG
 import com.mib.mycompose.ui.theme.loginTextStyle
 import com.mib.mycompose.ui.widget.BasicTextFieldWithHint
 import com.mib.mycompose.ui.widget.NavScreen
@@ -47,11 +52,25 @@ import com.mib.mycompose.viewmodel.MainViewModel
  */
 @Preview
 @Composable
-fun LoginComponent(nav: NavHostController? = null, mainViewModel: MainViewModel? = viewModel()) {
-	val loginResult = mainViewModel?.loginLiveData?.observeAsState()
-	if(loginResult?.value == true){
-		nav?.navigate(NavScreen.TabMain.route)
+fun LoginComponent(nav: NavHostController? = null) {
+    val mainViewModel: MainViewModel = viewModel()
+	Logger.d(LINK_TAG, "LoginComponent ${mainViewModel.hashCode()}")
+
+	LaunchedEffect(key1 = "key"){
+		Logger.d(LINK_TAG, "LoginComponent LaunchedEffect ${nav.hashCode()} ${this.hashCode()}")
+		mainViewModel?.nav = nav
 	}
+
+	DisposableEffect(Unit){
+		onDispose {
+			Logger.d(LINK_TAG, "LoginComponent DisposableEffect!!!")
+		}
+	}
+
+	SideEffect {
+		Logger.d(LINK_TAG, "LoginComponent SideEffect!!!")
+	}
+
 	Box(
 		modifier = Modifier
 			.fillMaxSize()
@@ -90,8 +109,8 @@ fun LoginComponent(nav: NavHostController? = null, mainViewModel: MainViewModel?
 			)
 
 			/** 输入框*/
-			var accountEditValue by remember { mutableStateOf("") }
-			var passwordEditValue by remember { mutableStateOf("") }
+			var accountEditValue by remember { mutableStateOf("100861") }
+			var passwordEditValue by remember { mutableStateOf("mib000") }
 
 			Text(
 				text = "Account",
@@ -189,5 +208,5 @@ fun LoginComponent(nav: NavHostController? = null, mainViewModel: MainViewModel?
 		}
 	}
 
-
+	Logger.d(LINK_TAG, "LoginComponentEnds ${mainViewModel.hashCode()}")
 }

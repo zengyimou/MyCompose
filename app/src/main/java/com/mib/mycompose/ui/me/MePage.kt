@@ -41,6 +41,7 @@ import androidx.navigation.compose.rememberNavController
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.mib.mycompose.BuildConfig
 import com.mib.mycompose.R
+import com.mib.mycompose.constants.C
 import com.mib.mycompose.event.Event
 import com.mib.mycompose.event.LogoutEvent
 import com.mib.mycompose.ext.toast
@@ -66,6 +67,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MePage(modifier: Modifier = Modifier, navHostController: NavHostController = rememberNavController()) {
 	var showDialog by remember { mutableStateOf(false) }
+	Logger.d(C.LINK_TAG,"MePage")
 	ConstraintLayout(
 		modifier = Modifier
 			.fillMaxWidth()
@@ -240,5 +242,6 @@ fun MePage(modifier: Modifier = Modifier, navHostController: NavHostController =
 			)
 		}
 	}
-	MainBackHandler()
+	Logger.d(C.LINK_TAG,"MePageEnd")
+//	MainBackHandler()
 }

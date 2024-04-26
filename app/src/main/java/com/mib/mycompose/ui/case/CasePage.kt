@@ -43,6 +43,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.mib.mycompose.constants.C.LINK_TAG
 import com.mib.mycompose.ext.toast
 import com.mib.mycompose.ui.theme.C_111111
 import com.mib.mycompose.ui.theme.C_Main
@@ -67,7 +68,7 @@ fun CasePage(modifier: Modifier = Modifier, navHostController: NavHostController
 		initialPageOffsetFraction = 0f,
 	) { 2 }
 	val scope = rememberCoroutineScope()
-
+	Logger.d(LINK_TAG, "CasePage")
 	val pages = listOf("UnPaid cases", "Paid cases")
 	Column(
 		modifier = modifier
@@ -139,6 +140,6 @@ fun CasePage(modifier: Modifier = Modifier, navHostController: NavHostController
 		}
 	}
 
-	MainBackHandler()
+//	MainBackHandler()
 //	CircularProgressIndicator(isShow = isShow)
 }

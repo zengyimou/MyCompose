@@ -14,7 +14,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -34,6 +36,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.mib.mycompose.R
+import com.mib.mycompose.constants.C
+import com.mib.mycompose.constants.C.LINK_TAG
 import com.mib.mycompose.ext.toast
 import com.mib.mycompose.ui.theme.C_111111
 import com.mib.mycompose.ui.theme.C_1A18FFAD
@@ -64,10 +68,10 @@ import com.mib.mycompose.util.Logger
 fun MainPage(
 	modifier: Modifier = Modifier,
 	navHostController: NavHostController = rememberNavController(),
-	mainPageViewModel: MainPageViewModel = viewModel()
 ){
-	val TAG = "MainPage"
-	Logger.d(TAG,"MainPage ${mainPageViewModel.hashCode()}")
+	val TAG = "MainPageCC"
+	val mainPageViewModel: MainPageViewModel = viewModel()
+	Logger.d(LINK_TAG,"MainPage ${mainPageViewModel.hashCode()}")
 	/** 是否显示Sip提醒模块*/
 	var isShowSipControl by rememberSaveable { mutableStateOf(true) }
 	/** 是否显示sip提醒文案*/
@@ -77,20 +81,28 @@ fun MainPage(
 
 	var selectCaseTab by rememberSaveable { mutableStateOf(0) }
 
-	var isFirstInitPgae by rememberSaveable { mutableStateOf(true) }
-
 	val caseDataList = mainPageViewModel.caseDataList.observeAsState()
-
+	val performanceData = mainPageViewModel.performanceDataLiveData.observeAsState()
+	val caseStaticData = mainPageViewModel.caseStaticDataLiveData.observeAsState()
 	val context = LocalContext.current
 
-	if(isFirstInitPgae){
+	LaunchedEffect(key1 = "key"){
+		Logger.d(LINK_TAG, "${mainPageViewModel.hashCode()} MainPage LaunchedEffect!!! ")
+		//页面数据
+		mainPageViewModel.getMainPageData(context)
+		//列表数据
 		mainPageViewModel.initCaseDataList()
-		isFirstInitPgae = false
 	}
-	//滚动状态
-	LaunchedEffect(Unit){
-		Logger.d(TAG, "LaunchedEffect!!!")
-	}
+	
+//	DisposableEffect(Unit){
+//		onDispose {
+//			Logger.d(LINK_TAG, "MainPage DisposableEffect!!!")
+//		}
+//	}
+//
+//	SideEffect {
+//		Logger.d(LINK_TAG, "MainPage SideEffect!!!")
+//	}
 
 	ConstraintLayout(
 		modifier = modifier
@@ -360,8 +372,8 @@ fun MainPage(
 			}
 		}
 	}
-	BackHandler(enabled = true) {
-		context.toast("当前为主页，不能返回")
-	}
-
+//	BackHandler(enabled = true) {
+//		context.toast("当前为主页，不能返回")
+//	}
+	Logger.d(LINK_TAG,"MainPageEnd ${mainPageViewModel.hashCode()}")
 }
