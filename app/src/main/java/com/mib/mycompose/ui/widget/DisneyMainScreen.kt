@@ -2,6 +2,7 @@ package com.mib.mycompose.ui.widget
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -41,14 +42,18 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.mib.mycompose.R
 import com.mib.mycompose.constants.C
+import com.mib.mycompose.constants.C.LINK_TAG
 import com.mib.mycompose.constants.Scene
 import com.mib.mycompose.constants.Scene.LOGIN_PAGE
+import com.mib.mycompose.constants.Scene.START_PAGE
 import com.mib.mycompose.event.Event
 import com.mib.mycompose.event.LogoutEvent
+import com.mib.mycompose.ext.toast
 import com.mib.mycompose.manager.UserInfoManager
 import com.mib.mycompose.ui.login.LoginComponent
 import com.mib.mycompose.ui.case.CasePage
 import com.mib.mycompose.ui.contact.ContactPage
+import com.mib.mycompose.ui.login.StartComponent
 import com.mib.mycompose.ui.main.MainPage
 import com.mib.mycompose.ui.me.MePage
 import com.mib.mycompose.ui.main.NavTabScreen
@@ -78,12 +83,10 @@ fun DisneyMainScreen(lifecycleOwner: LifecycleOwner, mainViewModel: MainViewMode
 		}
 		UserInfoManager.logout()
 	}
-	//tab数组
-	val tabs = listOf(NavScreen.TabMain, NavScreen.TabCase, NavScreen.TabContact, NavScreen.TabMe)
 
 	Scaffold(
 		bottomBar = {
-			BottomBar(navController = navController, tabs, mainViewModel)
+			BottomBar(navController = navController, mainViewModel)
 		}
 	){ innerPadding ->
 		val colors = MaterialTheme.colors
@@ -92,73 +95,41 @@ fun DisneyMainScreen(lifecycleOwner: LifecycleOwner, mainViewModel: MainViewMode
 		var statusBarColor by remember { mutableStateOf(colors.primaryVariant) }
 		var navigationBarColor by remember { mutableStateOf(colors.primaryVariant) }
 
-		val animatedStatusBarColor by animateColorAsState(
-			targetValue = statusBarColor,
-			animationSpec = tween()
-		)
-		val animatedNavigationBarColor by animateColorAsState(
-			targetValue = navigationBarColor,
-			animationSpec = tween()
-		)
-		Logger.d(C.LINK_TAG, "Scaffold Content")
+		Logger.d(LINK_TAG, "=====================Scaffold Content")
 		val modifier = Modifier.padding(innerPadding)
-		//初始页面
-		val commonPage = if(UserInfoManager.isLogin) NavScreen.TabMain.route else NavScreen.Login.route
-		Logger.d("MainComponent","UserInfoManager.isLogin ${UserInfoManager.isLogin}")
 
-		NavHost(navController = navController, startDestination = commonPage) {
+		NavHost(navController = navController, startDestination = NavScreen.Start.route) {
+			//判断初始跳转
+			composable(route = NavScreen.Start.route){
+				StartComponent(navHostController = navController)
+			}
 			//登陆页面
 			composable(route = NavScreen.Login.route){
-				Logger.d(C.LINK_TAG, "000")
-				LoginComponent(nav = navController)
-//				LaunchedEffect(Unit) {
-//					statusBarColor = Color.Transparent
-//					navigationBarColor = C_Main
-//				}
+				LoginComponent(navHostController = navController)
 			}
-
-//			composable(route = NavScreen.Main.route){
-//				MainComponent(nav = navController)
-//
-//				LaunchedEffect(Unit) {
-//					statusBarColor = C_Main
-//					navigationBarColor = C_Main
-//				}
-//			}
 
 			composable(route = NavScreen.TabMain.route) {
-				Logger.d(C.LINK_TAG, "111")
 				MainPage(modifier = modifier, navHostController = navController)
-
-//				LaunchedEffect(Unit) {
-//					statusBarColor = C_Main
-//					navigationBarColor = C_Main
-//				}
 			}
 			composable(route = NavScreen.TabCase.route) {
-				Logger.d(C.LINK_TAG, "222")
 				CasePage(modifier = modifier, navHostController = navController)
 			}
 			composable(route = NavScreen.TabContact.route) {
-				Logger.d(C.LINK_TAG, "333")
 				ContactPage(modifier = modifier, navHostController = navController)
 			}
 			composable(route = NavScreen.TabMe.route) {
-				Logger.d(C.LINK_TAG, "444")
 				MePage(modifier = modifier, navHostController = navController)
 			}
 		}
-//		LaunchedEffect(animatedStatusBarColor, animatedNavigationBarColor) {
-//			systemUiController.setStatusBarColor(animatedStatusBarColor)
-//			systemUiController.setNavigationBarColor(animatedNavigationBarColor)
-//		}
 	}
 
 }
 
 @SuppressLint("RestrictedApi")
 @Composable
-fun BottomBar(navController: NavController, tabs: List<NavScreen>, mainViewModel: MainViewModel){
+fun BottomBar(navController: NavController,  mainViewModel: MainViewModel){
+	//tab数组
+	val tabs = listOf(NavScreen.TabMain, NavScreen.TabCase, NavScreen.TabContact, NavScreen.TabMe)
 	Logger.d(C.LINK_TAG, "BottomBar")
 	val navBackStackEntry by navController.currentBackStackEntryAsState()
 	val currentRoute = navBackStackEntry?.destination?.route
@@ -199,9 +170,8 @@ fun BottomBar(navController: NavController, tabs: List<NavScreen>, mainViewModel
 		C_30B284,
 		FF999999,
 	)
-	Logger.d(C.LINK_TAG, "currentRoute $currentRoute")
 	if (currentRoute in routes) {
-		Logger.d(C.LINK_TAG, "BottomNavigation")
+		Logger.d(C.LINK_TAG, "BottomNavigation $currentRoute")
 		BottomNavigation(
 			backgroundColor = White,
 			modifier = Modifier
@@ -251,10 +221,15 @@ fun BottomBar(navController: NavController, tabs: List<NavScreen>, mainViewModel
 				)
 			}
 		}
+		BackHandler(enabled = true) {
+			context.toast("当前为主页，不能返回")
+		}
 	}
 }
 
 sealed class NavScreen(val route: String) {
+	object Start : NavScreen(START_PAGE)
+
 
 	object Login : NavScreen(LOGIN_PAGE)
 

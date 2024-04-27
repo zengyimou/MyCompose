@@ -143,20 +143,20 @@ fun MainComponent(nav: NavHostController = rememberNavController(), mainPageView
 //					else -> MainPage(modifier = modifier)
 //				}
 //			}
-			NavHost(navController = bottomNavController, startDestination = NavTabScreen.Main.route) {
-				composable(route = NavTabScreen.Main.route) {
-					MainPage(modifier = modifier, navHostController = nav)
-				}
-				composable(route = NavTabScreen.Case.route) {
-					CasePage(modifier = modifier, navHostController = nav)
-				}
-				composable(route = NavTabScreen.Contact.route) {
-					ContactPage(modifier = modifier, navHostController = nav)
-				}
-				composable(route = NavTabScreen.Me.route) {
-					MePage(modifier = modifier, navHostController = nav)
-				}
-			}
+//			NavHost(navController = bottomNavController, startDestination = NavTabScreen.Main.route) {
+//				composable(route = NavTabScreen.Main.route) {
+//					MainPage(modifier = modifier, navHostController = nav)
+//				}
+//				composable(route = NavTabScreen.Case.route) {
+//					CasePage(modifier = modifier, navHostController = nav)
+//				}
+//				composable(route = NavTabScreen.Contact.route) {
+//					ContactPage(modifier = modifier, navHostController = nav)
+//				}
+//				composable(route = NavTabScreen.Me.route) {
+//					MePage(modifier = modifier, navHostController = nav)
+//				}
+//			}
 
 		}
 	}

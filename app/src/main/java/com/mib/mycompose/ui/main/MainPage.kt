@@ -68,9 +68,9 @@ import com.mib.mycompose.util.Logger
 fun MainPage(
 	modifier: Modifier = Modifier,
 	navHostController: NavHostController = rememberNavController(),
+	mainPageViewModel: MainPageViewModel = viewModel(),
 ){
 	val TAG = "MainPageCC"
-	val mainPageViewModel: MainPageViewModel = viewModel()
 	Logger.d(LINK_TAG,"MainPage ${mainPageViewModel.hashCode()}")
 	/** 是否显示Sip提醒模块*/
 	var isShowSipControl by rememberSaveable { mutableStateOf(true) }
@@ -86,24 +86,20 @@ fun MainPage(
 	val caseStaticData = mainPageViewModel.caseStaticDataLiveData.observeAsState()
 	val context = LocalContext.current
 
-	LaunchedEffect(key1 = "key"){
+	var isFirstInit by rememberSaveable { mutableStateOf(true) }
+
+	LaunchedEffect(Unit){
 		Logger.d(LINK_TAG, "${mainPageViewModel.hashCode()} MainPage LaunchedEffect!!! ")
-		//页面数据
-		mainPageViewModel.getMainPageData(context)
-		//列表数据
-		mainPageViewModel.initCaseDataList()
+		if(isFirstInit){
+			Logger.d(LINK_TAG, "${mainPageViewModel.hashCode()} MainPage LaunchedEffect!!! $isFirstInit ")
+			//页面数据
+			mainPageViewModel.getMainPageData(context)
+			//列表数据
+			mainPageViewModel.initCaseDataList()
+			isFirstInit = false
+		}
 	}
 	
-//	DisposableEffect(Unit){
-//		onDispose {
-//			Logger.d(LINK_TAG, "MainPage DisposableEffect!!!")
-//		}
-//	}
-//
-//	SideEffect {
-//		Logger.d(LINK_TAG, "MainPage SideEffect!!!")
-//	}
-
 	ConstraintLayout(
 		modifier = modifier
 			.fillMaxWidth()

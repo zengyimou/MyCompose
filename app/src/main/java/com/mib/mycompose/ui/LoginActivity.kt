@@ -32,14 +32,6 @@ class LoginActivity : BaseActivity() {
 		}
 	}
 
-	private fun setObserver() {
-		mainViewModel.loginLiveData.observe(this) { success ->
-			if(success){
-				MainActivity.startMainActivity(this)
-			}
-		}
-	}
-
 
 }
 

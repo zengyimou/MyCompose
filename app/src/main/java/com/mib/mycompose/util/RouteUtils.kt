@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import com.mib.mycompose.ui.widget.NavScreen
 
 /**
  * 路由名称
@@ -70,6 +71,12 @@ object RouteUtils {
 
     fun <T> getArguments(navCtrl: NavHostController): T? {
         return navCtrl.previousBackStackEntry?.arguments?.getParcelable(ARGS)
+    }
+
+    fun NavHostController.navigateStart(routeName: String){
+        navigate(routeName) {
+            popUpTo(routeName) { inclusive = true }
+        }
     }
 
     /**

@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -39,11 +38,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.mib.mycompose.R
 import com.mib.mycompose.constants.C.LINK_TAG
+import com.mib.mycompose.ext.toast
+import com.mib.mycompose.manager.UserInfoManager
 import com.mib.mycompose.ui.theme.loginTextStyle
 import com.mib.mycompose.ui.widget.BasicTextFieldWithHint
+import com.mib.mycompose.ui.widget.CircularProgressIndicator
 import com.mib.mycompose.ui.widget.NavScreen
 import com.mib.mycompose.util.Logger
-import com.mib.mycompose.viewmodel.MainViewModel
+import com.mib.mycompose.util.RouteUtils.navigateStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  *  author : cengyimou
@@ -52,23 +56,48 @@ import com.mib.mycompose.viewmodel.MainViewModel
  */
 @Preview
 @Composable
-fun LoginComponent(nav: NavHostController? = null) {
-    val mainViewModel: MainViewModel = viewModel()
-	Logger.d(LINK_TAG, "LoginComponent ${mainViewModel.hashCode()}")
+fun LoginComponent(navHostController: NavHostController? = null, loginViewModel: LoginViewModel = viewModel()) {
 
-	LaunchedEffect(key1 = "key"){
-		Logger.d(LINK_TAG, "LoginComponent LaunchedEffect ${nav.hashCode()} ${this.hashCode()}")
-		mainViewModel?.nav = nav
-	}
+	val context = LocalContext.current
+	val loginState = loginViewModel.loginLiveData.observeAsState()
+	val throwableState = loginViewModel.throwableLiveData.observeAsState()
 
-	DisposableEffect(Unit){
-		onDispose {
-			Logger.d(LINK_TAG, "LoginComponent DisposableEffect!!!")
+	var btnClickState by remember { mutableStateOf(false) }
+
+	/** 输入框*/
+	var accountEditValue by remember { mutableStateOf("100861") }
+	var passwordEditValue by remember { mutableStateOf("mib000") }
+
+	var showLoading by remember { mutableStateOf(false) }
+
+	//请求失败toast
+	LaunchedEffect(key1 = throwableState.value) {
+		showLoading = false
+		if (throwableState.value?.message?.isNotEmpty() == true) {
+			context.toast(throwableState.value?.message.toString())
 		}
 	}
 
-	SideEffect {
-		Logger.d(LINK_TAG, "LoginComponent SideEffect!!!")
+	//登录成功跳转
+	LaunchedEffect(key1 = loginState.value) {
+		if (loginState.value == true) {
+			navHostController?.navigateStart(routeName = NavScreen.TabMain.route)
+		}
+	}
+
+	LaunchedEffect(key1 = btnClickState) {
+		if (btnClickState) {
+			showLoading = true
+			loginViewModel.login(account = accountEditValue, password = passwordEditValue)
+			btnClickState = false
+		}
+	}
+
+	DisposableEffect(Unit) {
+		onDispose {
+			showLoading = false
+			Logger.d(LINK_TAG, "LoginComponent DisposableEffect!!!${loginViewModel.hashCode()}")
+		}
 	}
 
 	Box(
@@ -107,10 +136,6 @@ fun LoginComponent(nav: NavHostController? = null) {
 					.wrapContentHeight(),
 				contentScale = ContentScale.Fit
 			)
-
-			/** 输入框*/
-			var accountEditValue by remember { mutableStateOf("100861") }
-			var passwordEditValue by remember { mutableStateOf("mib000") }
 
 			Text(
 				text = "Account",
@@ -179,7 +204,7 @@ fun LoginComponent(nav: NavHostController? = null) {
 			Button(
 				onClick = {
 					// 处理按钮点击事件
-					mainViewModel?.login(account = accountEditValue, password = passwordEditValue)
+					btnClickState = true
 				},
 				modifier = Modifier
 					.constrainAs(btnLogin) {
@@ -207,6 +232,5 @@ fun LoginComponent(nav: NavHostController? = null) {
 
 		}
 	}
-
-	Logger.d(LINK_TAG, "LoginComponentEnds ${mainViewModel.hashCode()}")
+	CircularProgressIndicator(isShow = showLoading)
 }
