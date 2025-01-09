@@ -13,4 +13,6 @@ object Scene {
 	const val TAG_CASE_PAGE = "tab_case"
 	const val TAG_CONTACT_PAGE = "tab_contact"
 	const val TAG_ME_PAGE = "tab_me"
+
+	const val CASE_DETAIL = "case_detail"
 }

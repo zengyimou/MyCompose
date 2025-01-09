@@ -39,24 +39,29 @@ import androidx.navigation.NavHostController
 import com.mib.mycompose.R
 import com.mib.mycompose.constants.C.LINK_TAG
 import com.mib.mycompose.ext.toast
-import com.mib.mycompose.manager.UserInfoManager
 import com.mib.mycompose.ui.theme.loginTextStyle
 import com.mib.mycompose.ui.widget.BasicTextFieldWithHint
 import com.mib.mycompose.ui.widget.CircularProgressIndicator
 import com.mib.mycompose.ui.widget.NavScreen
 import com.mib.mycompose.util.Logger
 import com.mib.mycompose.util.RouteUtils.navigateStart
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 /**
  *  author : cengyimou
  *  date : 2024/4/9 17:53
+ *
+ *  compose note :
+ *
+ *  LaunchedEffect = 启动挂起函数（协程），用于一次性任务或基于 key 变化的任务。 适合：网络请求、延迟操作、触发动画等。
+ *	DisposableEffect = 创建并清理需要生命周期管理的副作用，例如监听器、广播接收器。适合：监听事件、注册和注销资源、设备状态监控等。
+ *  SideEffect = 处理轻量级的副作用，通常用于调试或同步非协程的任务。 适合：日志记录、更新外部依赖、调试等
+ *
+ *
  *  description :
  */
 @Preview
 @Composable
-fun LoginComponent(navHostController: NavHostController? = null, loginViewModel: LoginViewModel = viewModel()) {
+fun LoginPage(navHostController: NavHostController? = null, loginViewModel: LoginViewModel = viewModel()) {
 
 	val context = LocalContext.current
 	val loginState = loginViewModel.loginLiveData.observeAsState()
@@ -65,8 +70,8 @@ fun LoginComponent(navHostController: NavHostController? = null, loginViewModel:
 	var btnClickState by remember { mutableStateOf(false) }
 
 	/** 输入框*/
-	var accountEditValue by remember { mutableStateOf("100861") }
-	var passwordEditValue by remember { mutableStateOf("mib000") }
+	var accountEditValue by remember { mutableStateOf("") }
+	var passwordEditValue by remember { mutableStateOf("") }
 
 	var showLoading by remember { mutableStateOf(false) }
 

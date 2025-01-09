@@ -63,7 +63,7 @@ import com.mib.mycompose.util.Logger
  *  date : 2024/4/11 10:31
  *  description :
  */
-@Preview
+@Preview(name = "test")
 @Composable
 fun MainPage(
 	modifier: Modifier = Modifier,

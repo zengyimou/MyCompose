@@ -36,7 +36,6 @@ import androidx.navigation.compose.rememberNavController
 import com.mib.mycompose.R
 import com.mib.mycompose.constants.Scene
 import com.mib.mycompose.ext.toast
-import com.mib.mycompose.ui.case.CasePage
 import com.mib.mycompose.ui.contact.ContactPage
 import com.mib.mycompose.ui.me.MePage
 import com.mib.mycompose.ui.theme.C_30B284

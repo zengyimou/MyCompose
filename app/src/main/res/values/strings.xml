@@ -14,4 +14,6 @@
     <string name="main_collect_onlinetime">App Onlinetime</string>
     <string name="main_collect_group_ranking">Group ranking</string>
 
+    <string name="task_title">Task Detail</string>
+
 </resources>

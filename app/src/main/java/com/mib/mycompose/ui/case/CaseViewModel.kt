@@ -23,6 +23,7 @@ import com.mib.mycompose.viewmodel.BaseViewModel
  *  description :
  */
 class CaseViewModel : BaseViewModel() {
+	var test = 0
 
 	val caseList = MutableLiveData<List<NewCaseListItem>>()
 	/** 当前请求页数*/

@@ -50,40 +50,43 @@ import java.util.Date
 @Preview
 @Composable
 fun DropDownTab(
-	modifier: Modifier = Modifier,
-	tabText: String = "tabasd",
-	isSelected: Boolean = false,
-	onClick: () -> Unit = {},
+    modifier: Modifier = Modifier,
+    tabText: String = "tabasd",
+    isSelected: Boolean = false,
+    onClick: () -> Unit = {},
 ) {
-	ConstraintLayout(
-		modifier = modifier
+    ConstraintLayout(
+        modifier = modifier
 			.heightIn(44.dp, 64.dp)
 			.background(White)
 			.clickable {
 				onClick.invoke()
 			},
-	) {
-		val (tvTab, ivArrow) = createRefs()
-		/** 旋转状态值*/
-		val rotationValue by animateFloatAsState(targetValue = if (isSelected) -180f else 0f, label = "")
+    ) {
+        val (tvTab, ivArrow) = createRefs()
+        /** 旋转状态值*/
+        val rotationValue by animateFloatAsState(
+            targetValue = if (isSelected) -180f else 0f,
+            label = ""
+        )
 
-		Text(
-			text = tabText,
-			fontSize = 14.sp,
-			color = if (isSelected) C_Main else C_FF000000,
-			modifier = Modifier.constrainAs(tvTab) {
-				start.linkTo(parent.start, 12.dp)
-				top.linkTo(parent.top)
-				end.linkTo(ivArrow.start, 4.dp)
-				bottom.linkTo(parent.bottom)
-				width = Dimension.fillToConstraints
-			},
-		)
+        Text(
+            text = tabText,
+            fontSize = 14.sp,
+            color = if (isSelected) C_Main else C_FF000000,
+            modifier = Modifier.constrainAs(tvTab) {
+                start.linkTo(parent.start, 12.dp)
+                top.linkTo(parent.top)
+                end.linkTo(ivArrow.start, 4.dp)
+                bottom.linkTo(parent.bottom)
+                width = Dimension.fillToConstraints
+            },
+        )
 
-		Image(
-			painter = painterResource(id = R.drawable.ic_drop_down),
-			contentDescription = null,
-			modifier = Modifier
+        Image(
+            painter = painterResource(id = R.drawable.ic_drop_down),
+            contentDescription = null,
+            modifier = Modifier
 				.constrainAs(ivArrow) {
 					top.linkTo(parent.top)
 					bottom.linkTo(parent.bottom)
@@ -94,8 +97,8 @@ fun DropDownTab(
 				.graphicsLayer {
 					rotationX = rotationValue
 				},
-		)
-	}
+        )
+    }
 
 }
 
@@ -109,13 +112,13 @@ fun DropDownTab(
 @Preview
 @Composable
 fun TaskListItem(
-	modifier: Modifier = Modifier,
-	item: NewCaseListItem? = null,
-	onClick: () -> Unit = {},
+    modifier: Modifier = Modifier,
+    item: NewCaseListItem? = null,
+    onClick: () -> Unit = {},
 ) {
 
-	ConstraintLayout(
-		modifier = modifier
+    ConstraintLayout(
+        modifier = modifier
 			.wrapContentHeight()
 			.fillMaxWidth()
 			.background(White)
@@ -123,29 +126,32 @@ fun TaskListItem(
 			.clickable {
 				onClick.invoke()
 			},
-	) {
-		val (tvCustomerName, tvCallBackTime, tvDueAmount, tvDueAmountLab,
-			vLineTop, vLineBottom, tvRepaymentAmount, tvRepaymentAmountLab, flowLayout) = createRefs()
+    ) {
+        val (tvCustomerName, tvCallBackTime, tvDueAmount, tvDueAmountLab,
+            vLineTop, vLineBottom, tvRepaymentAmount, tvRepaymentAmountLab, flowLayout) = createRefs()
 
-		Text(
-			modifier = Modifier.constrainAs(tvCustomerName) {
-				top.linkTo(parent.top, 22.dp)
-				start.linkTo(parent.start, 16.dp)
-				end.linkTo(parent.end, 16.dp)
-				width = Dimension.fillToConstraints
-			},
-			text = item?.customerName ?: "null",
-			color = C_111111,
-			fontSize = 14.sp,
-		)
+        Text(
+            modifier = Modifier.constrainAs(tvCustomerName) {
+                top.linkTo(parent.top, 22.dp)
+                start.linkTo(parent.start, 16.dp)
+                end.linkTo(parent.end, 16.dp)
+                width = Dimension.fillToConstraints
+            },
+            text = item?.customerName ?: "null",
+            color = C_111111,
+            fontSize = 14.sp,
+        )
 
-		val reminderTimeText = if (item != null && item.reminderTime != 0) {
-			DateFormatConverter.getCustomString(Date(item.reminderTime.toLong().times(1000)), DATE_FORMAT8)
-		} else {
-			DateFormatConverter.getCustomString(Date(), DATE_FORMAT8)
-		}
-		TextWithStartIcon(
-			modifier = Modifier
+        val reminderTimeText = if (item != null && item.reminderTime != 0) {
+            DateFormatConverter.getCustomString(
+                Date(item.reminderTime.toLong().times(1000)),
+                DATE_FORMAT8
+            )
+        } else {
+            DateFormatConverter.getCustomString(Date(), DATE_FORMAT8)
+        }
+        TextWithStartIcon(
+            modifier = Modifier
 				.constrainAs(tvCallBackTime) {
 					top.linkTo(parent.top)
 					end.linkTo(parent.end)
@@ -153,14 +159,14 @@ fun TaskListItem(
 				}
 				.background(color = C_FFEBCD, shape = RoundedCornerShape(bottomStart = 12.dp))
 				.padding(horizontal = 8.dp, vertical = 2.dp),
-			text = reminderTimeText,
-			color = C_FF9900,
-			fontSize = 14.sp,
-			res = R.mipmap.ic_callback_orange_small
-		)
+            text = reminderTimeText,
+            color = C_FF9900,
+            fontSize = 14.sp,
+            res = R.mipmap.ic_callback_orange_small
+        )
 
-		Spacer(
-			modifier = Modifier
+        Spacer(
+            modifier = Modifier
 				.constrainAs(vLineTop) {
 					top.linkTo(tvCustomerName.bottom, 8.dp)
 					end.linkTo(parent.end, 16.dp)
@@ -169,10 +175,10 @@ fun TaskListItem(
 				}
 				.background(color = C_F6F6F6)
 				.height(1.dp)
-		)
+        )
 
 
-		FlowRow(modifier = Modifier
+        FlowRow(modifier = Modifier
 			.padding(horizontal = 16.dp)
 			.constrainAs(flowLayout) {
 				top.linkTo(vLineTop.bottom, 8.dp)
@@ -180,39 +186,39 @@ fun TaskListItem(
 				start.linkTo(parent.start)
 				width = Dimension.fillToConstraints
 			}) {
-			FlowTagItem(modifier = Modifier.padding(end = 4.dp), text = "text1")
-			FlowTagItem(modifier = Modifier.padding(end = 4.dp), text = "text1")
-			FlowTagItem(modifier = Modifier.padding(end = 4.dp), text = "text1")
-			FlowTagItem(modifier = Modifier.padding(end = 4.dp), text = "text1")
-			FlowTagItem(modifier = Modifier.padding(end = 4.dp), text = "text1")
-		}
+            FlowTagItem(modifier = Modifier.padding(end = 4.dp), text = "text1")
+            FlowTagItem(modifier = Modifier.padding(end = 4.dp), text = "text1")
+            FlowTagItem(modifier = Modifier.padding(end = 4.dp), text = "text1")
+            FlowTagItem(modifier = Modifier.padding(end = 4.dp), text = "text1")
+            FlowTagItem(modifier = Modifier.padding(end = 4.dp), text = "text1")
+        }
 
-		Text(
-			modifier = Modifier.constrainAs(tvDueAmountLab) {
-				top.linkTo(flowLayout.bottom, 8.dp)
-				start.linkTo(parent.start, 16.dp)
-				end.linkTo(parent.end, 16.dp)
-				width = Dimension.fillToConstraints
-			},
-			text = "Due Amount",
-			color = C_999999,
-			fontSize = 10.sp,
-		)
+        Text(
+            modifier = Modifier.constrainAs(tvDueAmountLab) {
+                top.linkTo(flowLayout.bottom, 8.dp)
+                start.linkTo(parent.start, 16.dp)
+                end.linkTo(parent.end, 16.dp)
+                width = Dimension.fillToConstraints
+            },
+            text = "Due Amount",
+            color = C_999999,
+            fontSize = 10.sp,
+        )
 
-		Text(
-			modifier = Modifier.constrainAs(tvDueAmount) {
-				top.linkTo(tvDueAmountLab.bottom, 2.dp)
-				start.linkTo(parent.start, 16.dp)
-				end.linkTo(parent.end, 16.dp)
-				width = Dimension.fillToConstraints
-			},
-			text = AmoutUtil.formatFloatNumber(item?.remainAmount ?: "0"),
-			color = C_111111,
-			fontSize = 18.sp,
-		)
+        Text(
+            modifier = Modifier.constrainAs(tvDueAmount) {
+                top.linkTo(tvDueAmountLab.bottom, 2.dp)
+                start.linkTo(parent.start, 16.dp)
+                end.linkTo(parent.end, 16.dp)
+                width = Dimension.fillToConstraints
+            },
+            text = AmoutUtil.formatFloatNumber(item?.remainAmount ?: "0"),
+            color = C_111111,
+            fontSize = 18.sp,
+        )
 
-		Spacer(
-			modifier = Modifier
+        Spacer(
+            modifier = Modifier
 				.constrainAs(vLineBottom) {
 					top.linkTo(tvDueAmount.bottom, 16.dp)
 					end.linkTo(parent.end, 16.dp)
@@ -221,48 +227,48 @@ fun TaskListItem(
 				}
 				.background(color = C_F6F6F6)
 				.height(1.dp)
-		)
+        )
 
-		Text(
-			modifier = Modifier.constrainAs(tvRepaymentAmountLab) {
-				top.linkTo(vLineBottom.bottom, 12.dp)
-				start.linkTo(parent.start, 16.dp)
-				end.linkTo(tvRepaymentAmount.start, 10.dp)
-				width = Dimension.fillToConstraints
-			},
-			text = "Performance repayment amount:",
-			color = C_999999,
-			fontSize = 12.sp,
-		)
+        Text(
+            modifier = Modifier.constrainAs(tvRepaymentAmountLab) {
+                top.linkTo(vLineBottom.bottom, 12.dp)
+                start.linkTo(parent.start, 16.dp)
+                end.linkTo(tvRepaymentAmount.start, 10.dp)
+                width = Dimension.fillToConstraints
+            },
+            text = "Performance repayment amount:",
+            color = C_999999,
+            fontSize = 12.sp,
+        )
 
-		Text(
-			modifier = Modifier.constrainAs(tvRepaymentAmount) {
-				top.linkTo(tvRepaymentAmountLab.top)
-				start.linkTo(tvRepaymentAmountLab.end)
-				end.linkTo(parent.end, 16.dp)
-				width = Dimension.wrapContent
-			},
-			textAlign = TextAlign.End,
-			text = item?.performanceAmount?: "123123",
-			color = C_111111,
-			fontSize = 18.sp,
-		)
+        Text(
+            modifier = Modifier.constrainAs(tvRepaymentAmount) {
+                top.linkTo(tvRepaymentAmountLab.top)
+                start.linkTo(tvRepaymentAmountLab.end)
+                end.linkTo(parent.end, 16.dp)
+                width = Dimension.wrapContent
+            },
+            textAlign = TextAlign.End,
+            text = item?.performanceAmount ?: "123123",
+            color = C_111111,
+            fontSize = 18.sp,
+        )
 
-	}
+    }
 }
 
 @Preview
 @Composable
 fun FlowTagItem(
-	modifier: Modifier = Modifier,
-	text: String = "tag"
+    modifier: Modifier = Modifier,
+    text: String = "tag"
 ) {
-	Text(
-		modifier = modifier
+    Text(
+        modifier = modifier
 			.background(color = C_E7FFE6, shape = RoundedCornerShape(2.dp))
 			.padding(horizontal = 5.dp, vertical = 2.dp),
-		text = text,
-		color = C_Main,
-		fontSize = 10.sp,
-	)
+        text = text,
+        color = C_Main,
+        fontSize = 10.sp,
+    )
 }

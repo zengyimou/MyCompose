@@ -1,5 +1,6 @@
 package com.mib.mycompose.ui.case
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,8 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.jeremyliao.liveeventbus.LiveEventBus
+import com.mib.mycompose.constants.C.LINK_TAG
+import com.mib.mycompose.constants.Scene
 import com.mib.mycompose.event.Event
 import com.mib.mycompose.event.LogoutEvent
 import com.mib.mycompose.ext.toast
@@ -47,6 +50,7 @@ import com.mib.mycompose.ui.theme.C_Main
 import com.mib.mycompose.ui.widget.DropDownTab
 import com.mib.mycompose.ui.widget.ErrorContent
 import com.mib.mycompose.ui.widget.LoadingItem
+import com.mib.mycompose.ui.widget.NavScreen
 import com.mib.mycompose.ui.widget.NoMoreDataFindItem
 import com.mib.mycompose.ui.widget.TaskListItem
 import com.mib.mycompose.util.Logger
@@ -61,8 +65,11 @@ import com.mib.mycompose.util.Logger
 fun CaseListPage(
 	modifier: Modifier = Modifier,
 	navHostController: NavHostController = rememberNavController(),
-	caseListViewModel: CaseViewModel = viewModel()
+	caseListViewModel: CaseViewModel = viewModel(LocalContext.current as ComponentActivity)
 ) {
+	caseListViewModel.test = 1
+	Logger.d("zym", "CaseListPage code ${caseListViewModel.hashCode()}")
+	Logger.d("zym", "CaseListPage test ${caseListViewModel.test}")
 	/** select tab的选择状态*/
 	var taskSelectState by rememberSaveable { mutableStateOf(false) }
 	var intentionalSelectState by rememberSaveable { mutableStateOf(false) }
@@ -159,6 +166,7 @@ fun CaseListPage(
 						item = item
 					) {
 						//点击事件
+						navHostController.navigate("${NavScreen.CaseDetail.route}/${item.businessId}")
 					}
 				}
 				item {
