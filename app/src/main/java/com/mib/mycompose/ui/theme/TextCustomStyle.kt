@@ -17,7 +17,7 @@ val loginTextStyle = TextStyle(
 
 val editTextHintStyle = TextStyle(
 	color = FF999999,
-	fontSize = 16.sp,
+	fontSize = 18.sp,
 )
 
 val bgStyle = TextStyle(

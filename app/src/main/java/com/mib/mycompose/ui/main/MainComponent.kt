@@ -30,14 +30,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mib.mycompose.R
 import com.mib.mycompose.constants.Scene
 import com.mib.mycompose.ext.toast
-import com.mib.mycompose.ui.contact.ContactPage
-import com.mib.mycompose.ui.me.MePage
 import com.mib.mycompose.ui.theme.C_30B284
 import com.mib.mycompose.ui.theme.FF999999
 import com.mib.mycompose.ui.theme.White

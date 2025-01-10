@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.mib.mycompose.R
@@ -41,7 +43,9 @@ import com.mib.mycompose.constants.C.LINK_TAG
 import com.mib.mycompose.ext.toast
 import com.mib.mycompose.ui.theme.loginTextStyle
 import com.mib.mycompose.ui.widget.BasicTextFieldWithHint
+import com.mib.mycompose.ui.widget.BasicTextFieldWithPassword
 import com.mib.mycompose.ui.widget.CircularProgressIndicator
+import com.mib.mycompose.ui.widget.CommonInputText
 import com.mib.mycompose.ui.widget.NavScreen
 import com.mib.mycompose.util.Logger
 import com.mib.mycompose.util.RouteUtils.navigateStart
@@ -168,9 +172,8 @@ fun LoginPage(navHostController: NavHostController? = null, loginViewModel: Logi
 						start.linkTo(tvAccount.start)
 						end.linkTo(parent.end)
 					}
-					.padding(top = 6.dp)
-					.fillMaxWidth()
-					.background(Color.Red),
+					.padding(top = 10.dp)
+				,
 			)
 
 			Text(
@@ -187,7 +190,7 @@ fun LoginPage(navHostController: NavHostController? = null, loginViewModel: Logi
 				textAlign = TextAlign.Start
 			)
 
-			BasicTextFieldWithHint(
+			BasicTextFieldWithPassword(
 				hint = "Enter Password",
 				onValueChange = { value ->
 					Logger.d("LoginContent", "onValueChange: $value")
@@ -196,15 +199,18 @@ fun LoginPage(navHostController: NavHostController? = null, loginViewModel: Logi
 				modifier = Modifier
 					.constrainAs(etPassword) {
 						top.linkTo(tvPassword.bottom)
-						start.linkTo(tvAccount.start)
+						start.linkTo(tvPassword.start)
 						end.linkTo(parent.end)
+						width = Dimension.fillToConstraints // 填充剩余宽度
 					}
-					.fillMaxWidth()
-					.background(Color.Transparent)
 					.padding(top = 10.dp)
-					.background(Color.Red),
+					.wrapContentHeight()
+				,
 				isPassword = true
 			)
+
+
+
 
 			Button(
 				onClick = {

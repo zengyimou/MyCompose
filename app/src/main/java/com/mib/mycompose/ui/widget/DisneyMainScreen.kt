@@ -152,7 +152,6 @@ fun BottomBar(navController: NavController, mainViewModel: MainViewModel) {
     Logger.d(C.LINK_TAG, "BottomBar")
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-        ?: NavScreen.TabMain.route
     val routes = remember { tabs.map { it.route } }
 
     var selectItem by remember { mutableIntStateOf(0) }
@@ -190,7 +189,7 @@ fun BottomBar(navController: NavController, mainViewModel: MainViewModel) {
         FF999999,
     )
     if (currentRoute in routes) {
-        Logger.d(C.LINK_TAG, "BottomNavigation $currentRoute")
+        Logger.d("zym", "BottomNavigation $currentRoute")
         BottomNavigation(
             backgroundColor = White,
             modifier = Modifier

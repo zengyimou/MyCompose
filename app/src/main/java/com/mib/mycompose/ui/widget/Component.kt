@@ -5,14 +5,17 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.annotation.RawRes
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
@@ -26,8 +29,10 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -123,180 +128,171 @@ fun SimpleTextFieldComponent() {
  * @param modifier Modifier?
  * @param isPassword Boolean
  */
+@Preview
 @Composable
 fun BasicTextFieldWithHint(
-    hint: String,
-    onValueChange: (value: String) -> Unit,
-    modifier: Modifier? = Modifier
-        .fillMaxWidth()
-        .padding(16.dp),
+    modifier: Modifier = Modifier,
+    hint: String = "asdasdasdasdasda",
+    onValueChange: (value : String) -> Unit = {},
     isPassword: Boolean = false,
     defaultText: String = "",
 ) {
     var text by remember { mutableStateOf(defaultText) }
     var isShowIcon by remember { mutableStateOf(isPassword) }
     var isShowEditContext by remember { mutableStateOf(isShowIcon) }
-    Box(
-        modifier = modifier ?: Modifier
+    ConstraintLayout(
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .background(Color.Green)
     ) {
-        ConstraintLayout(
-            modifier = Modifier
-                .fillMaxWidth(1f)
-                .wrapContentHeight()
-        ) {
-            val (editText, tvHint, ivPwdIcon) = createRefs()
+        val (editText, tvHint) = createRefs()
 
-            BasicTextField(
-                value = text,
-                onValueChange = {
-                    text = it
-                    onValueChange(it)
-                },
-                textStyle = editTextHintStyle,
-                modifier = Modifier
-                    .constrainAs(editText) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(ivPwdIcon.start)
-                        width = Dimension.fillToConstraints // 横向占满
-                    }
-//					.fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(vertical = 10.dp),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    imeAction = ImeAction.Done,
-                    keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Number
-                ),
-                visualTransformation = if (isShowEditContext) PasswordVisualTransformation() else VisualTransformation.None,
-                decorationBox = { innerTextField ->
-                    Surface(
-                        color = colorResource(id = R.color.purple_500),
-                        modifier = Modifier
-                            .wrapContentHeight()
-                            .fillMaxWidth()
-                    ) {
-                        innerTextField()
-                    }
+        BasicTextField(
+            value = text,
+            onValueChange = {
+                text = it
+                onValueChange(it)
+            },
+            textStyle = editTextHintStyle,
+            modifier = Modifier
+                .constrainAs(editText) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    height = Dimension.wrapContent
                 }
-            )
-            if (text.isEmpty()) {
-                Text(
-                    text = hint,
-                    style = editTextHintStyle,
+//					.fillMaxWidth()
+                .wrapContentHeight()
+                .padding(vertical = 10.dp),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done,
+                keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Number
+            ),
+            visualTransformation = if (isShowEditContext) PasswordVisualTransformation() else VisualTransformation.None,
+            decorationBox = { innerTextField ->
+                Surface(
+                    color = colorResource(id = R.color.white),
                     modifier = Modifier
-                        .constrainAs(tvHint) {
-                            top.linkTo(editText.top)
-                            bottom.linkTo(editText.bottom)
-                            start.linkTo(editText.start)
-                            end.linkTo(ivPwdIcon.start)
-                            width = Dimension.fillToConstraints // 横向占满
-                        }
-                        .wrapContentHeight(),
-                    textAlign = TextAlign.Start,
-                )
+                        .wrapContentHeight()
+                        .fillMaxWidth()
+                ) {
+                    innerTextField()
+                }
             }
+        )
+        if (text.isEmpty()) {
+            Text(
+                text = hint,
+                style = editTextHintStyle,
+                modifier = Modifier
+                    .constrainAs(tvHint) {
+                        top.linkTo(editText.top)
+                        bottom.linkTo(editText.bottom)
+                        start.linkTo(editText.start)
+                        end.linkTo(editText.end)
+                        width = Dimension.fillToConstraints // 横向占满
+                        height = Dimension.wrapContent
+                    }
+                    .wrapContentHeight(),
+                textAlign = TextAlign.Start,
+            )
         }
     }
 }
 
+@Preview
 @Composable
 fun BasicTextFieldWithPassword(
-    hint: String,
-    onValueChange: (value: String) -> Unit,
-    modifier: Modifier? = Modifier
-        .fillMaxWidth()
-        .padding(16.dp),
+    modifier: Modifier = Modifier,
+    hint: String = "testasdasdasdasdasdASDASDASDasdasdasdasdasdsd",
+    onValueChange: (value: String) -> Unit = {},
     isPassword: Boolean = false
 ) {
     var text by remember { mutableStateOf("") }
     var isShowIcon by remember { mutableStateOf(isPassword) }
     var isShowEditContext by remember { mutableStateOf(isShowIcon) }
-    Box(
-        modifier = modifier ?: Modifier
+    ConstraintLayout(
+        modifier = modifier
+            .wrapContentHeight()
+            .fillMaxWidth()
+            .background(colorResource(id = R.color.purple_200)),
     ) {
-        ConstraintLayout(
+        val (editText, tvHint, ivPwdIcon) = createRefs()
+
+        Image(
+            painter = painterResource(id = if (isShowEditContext) R.drawable.icon_eye_close else R.drawable.icon_eye_open),
+            contentDescription = "",
             modifier = Modifier
-                .fillMaxWidth(1f)
-                .wrapContentHeight()
-                .background(colorResource(id = R.color.colorPrimary)),
-        ) {
-            val (editText, tvHint, ivPwdIcon) = createRefs()
-
-            BasicTextField(
-                value = text,
-                onValueChange = {
-                    text = it
-                    onValueChange(it)
-                },
-                textStyle = editTextHintStyle,
-                modifier = Modifier
-                    .constrainAs(editText) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(ivPwdIcon.start)
-                        width = Dimension.fillToConstraints // 横向占满
-                    }
-//					.fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(vertical = 10.dp),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    imeAction = ImeAction.Done,
-                    keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Number
-                ),
-                visualTransformation = if (isShowEditContext) PasswordVisualTransformation() else VisualTransformation.None,
-                decorationBox = { innerTextField ->
-                    Surface(
-                        color = colorResource(id = R.color.purple_500),
-                        modifier = Modifier
-                            .wrapContentHeight()
-                            .fillMaxWidth()
-                    ) {
-                        innerTextField()
-                    }
+                .constrainAs(ivPwdIcon) {
+                    top.linkTo(editText.top)
+                    bottom.linkTo(editText.bottom)
+                    end.linkTo(parent.end)
                 }
-            )
-            if (text.isEmpty()) {
-                Text(
-                    text = hint,
-                    style = editTextHintStyle,
+                .padding(vertical = 5.dp)
+                .background(color = colorResource(id = R.color.white))
+                .height(20.dp)
+                .width(20.dp)
+                .clickable {
+
+                }
+            ,
+            contentScale = ContentScale.Inside
+        )
+
+        BasicTextField(
+            value = text,
+            onValueChange = {
+                text = it
+                onValueChange(it)
+            },
+            textStyle = editTextHintStyle,
+            modifier = Modifier
+                .constrainAs(editText) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(ivPwdIcon.start)
+                    width = Dimension.fillToConstraints
+                }
+                .wrapContentHeight()
+                .background(color = Color.Red)
+                .padding(vertical = 10.dp),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done,
+                keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Number
+            ),
+            visualTransformation = if (isShowEditContext) PasswordVisualTransformation() else VisualTransformation.None,
+            decorationBox = { innerTextField ->
+                Surface(
+                    color = colorResource(id = R.color.white),
                     modifier = Modifier
-                        .constrainAs(tvHint) {
-                            top.linkTo(editText.top)
-                            bottom.linkTo(editText.bottom)
-                            start.linkTo(editText.start)
-                            end.linkTo(ivPwdIcon.start)
-                            width = Dimension.fillToConstraints // 横向占满
-                        }
-                        .background(color = colorResource(id = R.color.colorAccent))
-                        .wrapContentHeight(),
-                    textAlign = TextAlign.Start,
-                )
-            }
-            if (isShowIcon) {
-                Image(
-                    painter = painterResource(id = if (isShowEditContext) R.drawable.icon_eye_close else R.drawable.icon_eye_open),
-                    contentDescription = "",
-                    modifier = Modifier
-                        .constrainAs(ivPwdIcon) {
-                            top.linkTo(editText.top)
-                            bottom.linkTo(editText.bottom)
-                            start.linkTo(editText.end)
-                            end.linkTo(parent.end)
-                        }
-                        .padding(vertical = 5.dp)
-                        .background(color = colorResource(id = R.color.purple_500))
                         .wrapContentHeight()
-                        .wrapContentWidth()
-                        .alpha(if (isShowIcon) 1f else 0f),
-
-                    )
-            }
-
-        }
+                        .fillMaxWidth()
+                ) {
+                    innerTextField()
+                }
+            },
+        )
+//        if (text.isEmpty()) {
+//            Text(
+//                text = hint,
+//                style = editTextHintStyle,
+//                modifier = Modifier
+//                    .constrainAs(tvHint) {
+//                        top.linkTo(editText.top)
+//                        bottom.linkTo(editText.bottom)
+//                        start.linkTo(editText.start)
+//                        end.linkTo(ivPwdIcon.start)
+//                    }
+//                    .background(color = colorResource(id = R.color.transparent))
+//                    .wrapContentHeight(),
+//                maxLines = 1,
+//                textAlign = TextAlign.Start,
+//            )
+//        }
     }
 }
 
@@ -435,16 +431,16 @@ fun BackTile(
     modifier: Modifier = Modifier,
     title: String? = "title",
     rightRes: Int = 0
-){
-    val navViewModel: NavNavControllerViewModel = viewModel(LocalContext.current as ComponentActivity)
+) {
+    val navViewModel: NavNavControllerViewModel =
+        viewModel(LocalContext.current as ComponentActivity)
     Row(
         modifier = modifier
             .fillMaxWidth()
             .height(64.dp)
-            .background(Color.White)
-        ,
+            .background(Color.White),
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
         Box(
             modifier = Modifier
                 .padding(8.dp)
@@ -455,8 +451,7 @@ fun BackTile(
                     indication = null // 无波纹效果
                 ) {
                     navViewModel.navController.popBackStack()
-                }
-            ,
+                },
             contentAlignment = Alignment.Center
         ) {
             Image(
@@ -465,15 +460,14 @@ fun BackTile(
                 modifier = Modifier
                     .wrapContentHeight()
                     .wrapContentWidth()
-                    .padding(8.dp)
-                ,
+                    .padding(8.dp),
                 contentScale = ContentScale.None
             )
         }
         // 添加一个 Spacer 占用剩余空间
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = title?: "",
+            text = title ?: "",
             color = C_111111,
             fontSize = 18.sp,
             modifier = Modifier
@@ -485,7 +479,7 @@ fun BackTile(
         )
         // 添加一个 Spacer 占用剩余空间
         Spacer(modifier = Modifier.weight(1f))
-        if(rightRes != 0){
+        if (rightRes != 0) {
             Image(
                 painter = painterResource(id = rightRes),
                 contentDescription = null,
@@ -495,13 +489,58 @@ fun BackTile(
                     .wrapContentWidth(),
                 contentScale = ContentScale.Inside
             )
-        }else{
-            Spacer(modifier = Modifier
-                .padding(16.dp)
-                .height(20.dp)
-                .width(20.dp),)
+        } else {
+            Spacer(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .height(20.dp)
+                    .width(20.dp),
+            )
         }
 
+    }
+}
+
+@Preview
+@Composable
+fun CommonInputText(
+    modifier: Modifier = Modifier,
+    hint: String = "",
+    onValueChange: (value: String) -> Unit = {},
+    isPassword: Boolean = false,
+    defaultText: String = "",
+) {
+    var value by remember { mutableStateOf(defaultText) }
+    val isPwdState by remember { mutableStateOf(isPassword) }
+
+    Box(modifier = modifier) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = { content ->
+                value = content
+                onValueChange(content)
+            },
+            textStyle = editTextHintStyle,
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .border(BorderStroke(0.dp, Color.Transparent)),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done,
+                keyboardType = if (isPassword) KeyboardType.Password else KeyboardType.Number
+            ),
+            placeholder = {
+                Text(text = hint)
+            },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                unfocusedBorderColor = Color.Transparent, // 未聚焦时边框颜色设置为透明
+                focusedBorderColor = Color.Transparent,   // 聚焦时边框颜色设置为透明
+                disabledBorderColor = Color.Transparent,  // 禁用状态下边框颜色设置为透明
+                errorBorderColor = Color.Transparent      // 错误状态下边框颜色设置为透明
+            ),
+
+            )
     }
 }
 
