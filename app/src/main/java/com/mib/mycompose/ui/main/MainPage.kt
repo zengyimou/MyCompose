@@ -1,6 +1,7 @@
 package com.mib.mycompose.ui.main
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -25,9 +26,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -56,7 +59,9 @@ import com.mib.mycompose.ui.widget.MainPageColorItem
 import com.mib.mycompose.ui.widget.MainPageTab
 import com.mib.mycompose.ui.widget.TabContentItem
 import com.mib.mycompose.ui.widget.TextWithEndIcon
+import com.mib.mycompose.ui.widget.statusBarPadding
 import com.mib.mycompose.util.Logger
+import com.mib.mycompose.util.StatusBarUtils.statusBarHeightPx
 
 /**
  *  author : cengyimou
@@ -88,6 +93,18 @@ fun MainPage(
 
 	var isFirstInit by rememberSaveable { mutableStateOf(true) }
 
+	// 使用 rememberSaveable 保存滚动位置的数值
+	val savedScrollPosition = rememberSaveable { mutableStateOf(0f) }
+
+	// 创建 ScrollState，并恢复保存的滚动位置
+	val scrollState = remember { ScrollState(savedScrollPosition.value.toInt()) }
+
+	// 监听滚动位置的变化，并保存滚动位置
+	LaunchedEffect(scrollState.value) {
+		savedScrollPosition.value = scrollState.value.toFloat()
+	}
+	Logger.d("zym", "scrollState ${scrollState.value} ")
+
 	LaunchedEffect(Unit){
 		Logger.d(LINK_TAG, "${mainPageViewModel.hashCode()} MainPage LaunchedEffect!!! ")
 		if(isFirstInit){
@@ -104,8 +121,9 @@ fun MainPage(
 		modifier = modifier
 			.fillMaxWidth()
 			.fillMaxHeight()
+			.statusBarPadding()
 			.background(White)
-			.verticalScroll(rememberScrollState()),
+			.verticalScroll(scrollState),
 	) {
 		val ( tvHello, tvSoContent, clSipControl ) = createRefs()
 
@@ -117,7 +135,8 @@ fun MainPage(
 					start.linkTo(parent.start, 16.dp)
 					end.linkTo(parent.end, 16.dp)
 					width = Dimension.fillToConstraints
-				},
+				}
+			,
 			fontSize = 18.sp,
 			fontWeight = FontWeight.Bold,
 			res = R.mipmap.icon_emoji_hello,

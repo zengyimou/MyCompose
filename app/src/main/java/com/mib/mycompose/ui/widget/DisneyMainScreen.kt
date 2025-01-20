@@ -3,6 +3,10 @@ package com.mib.mycompose.ui.widget
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
@@ -29,14 +33,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.mib.mycompose.R
@@ -76,18 +83,24 @@ fun DisneyMainScreen(lifecycleOwner: LifecycleOwner, mainViewModel: MainViewMode
     val navViewModel: NavNavControllerViewModel = viewModel(LocalContext.current as ComponentActivity)
     val navController = rememberNavController()
     navViewModel.navController = navController
-
     //监听登陆过期事件
     LiveEventBus.get<LogoutEvent>(Event.EVENT_LOGOUT).observe(lifecycleOwner) {
         mainViewModel.resetBottomBarSelectIndex(true)
         //回退到登陆页面，并推出其他页面
         navController.navigate(route = NavScreen.Login.route) {
-            popUpTo(route = NavScreen.Login.route) { inclusive = true }
+            popUpTo(NavScreen.Login.route) { inclusive = true } // 清空整个导航堆栈
+            launchSingleTop = true
         }
+
         UserInfoManager.logout()
     }
 
-    SetStatusBarColor(color = C_Main, darkIcons = false)
+    navController.addOnDestinationChangedListener { controller, destination, arguments ->
+        Logger.d("NavStack", "Navigating to ${destination.route}")
+    }
+
+//    SetStatusBarColor(color = C_Main, darkIcons = false)
+    SetEdgeToEdge(color = C_Main, darkIcons = true)
 
     Scaffold(
         bottomBar = {
@@ -95,17 +108,30 @@ fun DisneyMainScreen(lifecycleOwner: LifecycleOwner, mainViewModel: MainViewMode
         }
     ) { innerPadding ->
         val colors = MaterialTheme.colors
-        val systemUiController = rememberSystemUiController()
-
-        var statusBarColor by remember { mutableStateOf(colors.primaryVariant) }
-        var navigationBarColor by remember { mutableStateOf(colors.primaryVariant) }
+//        val systemUiController = rememberSystemUiController()
+//        var statusBarColor by remember { mutableStateOf(colors.primaryVariant) }
+//        var navigationBarColor by remember { mutableStateOf(colors.primaryVariant) }
 
 
 
         Logger.d(LINK_TAG, "=====================Scaffold Content")
         val modifier = Modifier.padding(innerPadding)
-
-        NavHost(navController = navController, startDestination = NavScreen.Start.route) {
+        NavHost(
+            navController = navController,
+            startDestination = NavScreen.Start.route,
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { fullWidth -> fullWidth },
+                    animationSpec = tween(300)
+                )
+            },
+            exitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { fullWidth -> -fullWidth },
+                    animationSpec = tween(300)
+                )
+            },
+        ) {
             //判断初始跳转
             composable(route = NavScreen.Start.route) {
                 StartComponent(navHostController = navController)
@@ -149,9 +175,10 @@ fun DisneyMainScreen(lifecycleOwner: LifecycleOwner, mainViewModel: MainViewMode
 fun BottomBar(navController: NavController, mainViewModel: MainViewModel) {
     //tab数组
     val tabs = listOf(NavScreen.TabMain, NavScreen.TabCase, NavScreen.TabContact, NavScreen.TabMe)
-    Logger.d(C.LINK_TAG, "BottomBar")
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+
+    Logger.d(C.LINK_TAG, "BottomBar currentRoute ${currentRoute}")
     val routes = remember { tabs.map { it.route } }
 
     var selectItem by remember { mutableIntStateOf(0) }
@@ -228,11 +255,13 @@ fun BottomBar(navController: NavController, mainViewModel: MainViewModel) {
                             1 -> NavScreen.TabCase.route
                             2 -> NavScreen.TabContact.route
                             3 -> NavScreen.TabMe.route
-                            else -> NavScreen.TabMain.route
+                            else -> NavScreen.TabMe.route
                         }
-                        Logger.d(C.LINK_TAG, "onClick $index")
+                        Logger.d(C.LINK_TAG, "onClick $index $route")
                         navController.navigate(route) {
-                            popUpTo(navController.graph.startDestinationId) {
+                            val id = navController.graph.findStartDestination().id
+                            Logger.d(C.LINK_TAG, "id $id")
+                            popUpTo(id) {
                                 saveState = true
                             }
                             launchSingleTop = true

@@ -8,9 +8,11 @@ import android.view.Window
 import android.view.WindowInsetsController
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.ui.unit.Dp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import com.mib.mycompose.util.StatusBarUtils.statusBarHeightPx
 
 /**
  *  author : cengyimou
@@ -81,24 +83,5 @@ object StatusBarUtils {
             }
         }
     }
-
-}
-
-
-fun ComponentActivity.enableCustomEdgeToEdge(statusBarColor: Int = Color.TRANSPARENT){
-    enableEdgeToEdge()
-
-    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
-        window.isNavigationBarContrastEnforced = false
-    }
-
-    window.statusBarColor = statusBarColor
-
-    ViewCompat.setOnApplyWindowInsetsListener(window.decorView){ view, insets ->
-        val navBarInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
-        val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
-        view.setPadding(0, 0, 0, navBarInsets.bottom)
-
-        WindowInsetsCompat.CONSUMED
-    }
+    var statusBarHeightPx =  0
 }

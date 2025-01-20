@@ -26,7 +26,7 @@ class App: BaseApplication() {
 			.setConnectTimeout(60L)
 			.setWriteTimeout(60L)
 			.setReadTimeout(60L)
-			.setServerUrl("http://testhk5.xcreditech.com/api-middle/api/")
+			.setServerUrl(BuildConfig.SERVER_URL)
 			.setRetryOnConnectionFailure(true)
 			.addInterceptor(RequestInterceptor())
 		if (BuildConfig.DEBUG) {

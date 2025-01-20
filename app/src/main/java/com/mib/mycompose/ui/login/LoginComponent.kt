@@ -2,7 +2,9 @@ package com.mib.mycompose.ui.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -10,11 +12,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -78,7 +83,6 @@ fun LoginPage(navHostController: NavHostController? = null, loginViewModel: Logi
 	var passwordEditValue by remember { mutableStateOf("") }
 
 	var showLoading by remember { mutableStateOf(false) }
-
 	//请求失败toast
 	LaunchedEffect(key1 = throwableState.value) {
 		showLoading = false
@@ -97,7 +101,7 @@ fun LoginPage(navHostController: NavHostController? = null, loginViewModel: Logi
 	LaunchedEffect(key1 = btnClickState) {
 		if (btnClickState) {
 			showLoading = true
-			loginViewModel.login(account = accountEditValue, password = passwordEditValue)
+			loginViewModel.login(account = "400002", password = "mib000")
 			btnClickState = false
 		}
 	}
@@ -146,6 +150,7 @@ fun LoginPage(navHostController: NavHostController? = null, loginViewModel: Logi
 				contentScale = ContentScale.Fit
 			)
 
+
 			Text(
 				text = "Account",
 				modifier = Modifier
@@ -175,6 +180,71 @@ fun LoginPage(navHostController: NavHostController? = null, loginViewModel: Logi
 					.padding(top = 10.dp)
 				,
 			)
+
+//			ConstraintLayout(
+//				modifier = Modifier
+//					.constrainAs(etAccount) {
+//						top.linkTo(tvAccount.bottom)
+//						start.linkTo(tvAccount.start)
+//						end.linkTo(parent.end)
+//					}
+//					.padding(top = 10.dp)
+//					.wrapContentHeight()
+//					.fillMaxWidth()
+//					.background(colorResource(id = R.color.purple_200)),
+//			) {
+//				val (editText, ivPwdIcon) = createRefs()
+//
+//				Image(
+//					painter = painterResource(id = R.drawable.icon_eye_close),
+//					contentDescription = "",
+//					modifier = Modifier
+//						.constrainAs(ivPwdIcon) {
+//							top.linkTo(parent.top)
+//							bottom.linkTo(parent.bottom)
+//							end.linkTo(parent.end)
+//						}
+//						.padding(vertical = 5.dp)
+//						.background(color = colorResource(id = R.color.white))
+//						.height(20.dp)
+//						.width(20.dp)
+//						.clickable {
+//
+//						}
+//					,
+//					contentScale = ContentScale.Inside
+//				)
+//
+//				BasicTextField(
+//					value = accountEditValue,
+//					onValueChange = { value ->
+//						accountEditValue = value
+//					},
+//					textStyle = editTextHintStyle,
+//					modifier = Modifier
+//						.constrainAs(editText) {
+//							top.linkTo(parent.top)
+//							bottom.linkTo(parent.bottom)
+//							start.linkTo(parent.start)
+//							end.linkTo(ivPwdIcon.start)
+//							width = Dimension.preferredWrapContent
+//						}
+//						.wrapContentHeight()
+//						.background(color = Color.Red)
+//						.padding(vertical = 10.dp),
+//					singleLine = true,
+//					decorationBox = { innerTextField ->
+//						Surface(
+//							color = colorResource(id = R.color.white),
+//							modifier = Modifier
+//								.wrapContentHeight()
+//								.fillMaxWidth()
+//						) {
+//							innerTextField()
+//						}
+//					},
+//				)
+//			}
 
 			Text(
 				text = "Password",

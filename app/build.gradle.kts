@@ -1,8 +1,13 @@
+import java.util.Properties
+
 plugins {
 	id("com.android.application")
 	id("org.jetbrains.kotlin.android")
 }
 
+val properties: Properties = Properties()
+properties.load(rootProject.file("local.properties").inputStream())
+val serverUrl: String = properties.getProperty("serverUrl")
 android {
 	namespace = "com.mib.mycompose"
 	compileSdk = 34
@@ -23,12 +28,14 @@ android {
 	buildTypes {
 
 		getByName("debug") {
+			buildConfigField("String","SERVER_URL", "\"${serverUrl}\"")
 			isDebuggable = true
 			isShrinkResources = false
 			isMinifyEnabled = false
 			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 		}
 		getByName("release") {
+			buildConfigField("String","SERVER_URL", serverUrl)
 			isDebuggable = false
 			isShrinkResources = true
 			isMinifyEnabled = true
@@ -58,6 +65,7 @@ android {
 }
 
 dependencies {
+	implementation("androidx.compose.ui:ui-test-android:1.7.6")
 	val composeVersion = "1.7.6"
 
 	implementation("androidx.core:core-ktx:1.9.0")
@@ -84,10 +92,11 @@ dependencies {
 	// 下拉刷新
 	implementation("com.google.accompanist:accompanist-swiperefresh:0.21.2-beta")
 	//Paging 3.0
-	implementation("androidx.paging:paging-compose:3.2.1")
-	implementation("androidx.paging:paging-runtime-ktx:3.2.1")
+	implementation("androidx.paging:paging-compose:3.3.5")
+	implementation("androidx.paging:paging-runtime-ktx:3.3.5")
 
-	implementation("com.google.accompanist:accompanist-systemuicontroller:0.28.0")
+	implementation("com.google.accompanist:accompanist-systemuicontroller:0.36.0")
+	implementation("com.google.accompanist:accompanist-navigation-animation:0.28.0")
 
 	api("com.squareup.okhttp3:okhttp:4.10.0")
 	api("com.squareup.retrofit2:retrofit:2.9.0")

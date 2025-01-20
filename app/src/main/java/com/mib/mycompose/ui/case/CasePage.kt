@@ -37,6 +37,7 @@ import androidx.navigation.compose.rememberNavController
 import com.mib.mycompose.constants.C.LINK_TAG
 import com.mib.mycompose.ui.theme.C_111111
 import com.mib.mycompose.ui.theme.C_Main
+import com.mib.mycompose.ui.widget.statusBarPadding
 import com.mib.mycompose.util.Logger
 import kotlinx.coroutines.launch
 
@@ -61,6 +62,7 @@ fun CasePage(modifier: Modifier = Modifier, navHostController: NavHostController
 		modifier = modifier
 			.fillMaxWidth()
 			.fillMaxHeight()
+			.statusBarPadding()
 			.background(color = Color.White)
 	) {
 		TabRow(

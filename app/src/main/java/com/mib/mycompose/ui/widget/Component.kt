@@ -206,7 +206,7 @@ fun BasicTextFieldWithHint(
 @Composable
 fun BasicTextFieldWithPassword(
     modifier: Modifier = Modifier,
-    hint: String = "testasdasdasdasdasdASDASDASDasdasdasdasdasdsd",
+    hint: String = "testasdasdasdasdasdASD",
     onValueChange: (value: String) -> Unit = {},
     isPassword: Boolean = false
 ) {
@@ -230,12 +230,12 @@ fun BasicTextFieldWithPassword(
                     bottom.linkTo(editText.bottom)
                     end.linkTo(parent.end)
                 }
-                .padding(vertical = 5.dp)
+                .padding(vertical = 5.dp, horizontal = 4.dp)
                 .background(color = colorResource(id = R.color.white))
                 .height(20.dp)
                 .width(20.dp)
                 .clickable {
-
+                    isShowEditContext = !isShowEditContext
                 }
             ,
             contentScale = ContentScale.Inside
@@ -253,8 +253,8 @@ fun BasicTextFieldWithPassword(
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
                     start.linkTo(parent.start)
-                    end.linkTo(ivPwdIcon.start)
-                    width = Dimension.fillToConstraints
+                    end.linkTo(ivPwdIcon.start, margin = 10.dp)
+                    width = Dimension.preferredWrapContent
                 }
                 .wrapContentHeight()
                 .background(color = Color.Red)
@@ -276,23 +276,24 @@ fun BasicTextFieldWithPassword(
                 }
             },
         )
-//        if (text.isEmpty()) {
-//            Text(
-//                text = hint,
-//                style = editTextHintStyle,
-//                modifier = Modifier
-//                    .constrainAs(tvHint) {
-//                        top.linkTo(editText.top)
-//                        bottom.linkTo(editText.bottom)
-//                        start.linkTo(editText.start)
-//                        end.linkTo(ivPwdIcon.start)
-//                    }
-//                    .background(color = colorResource(id = R.color.transparent))
-//                    .wrapContentHeight(),
-//                maxLines = 1,
-//                textAlign = TextAlign.Start,
-//            )
-//        }
+        if (text.isEmpty()) {
+            Text(
+                text = hint,
+                style = editTextHintStyle,
+                modifier = Modifier
+                    .constrainAs(tvHint) {
+                        top.linkTo(editText.top)
+                        bottom.linkTo(editText.bottom)
+                        start.linkTo(editText.start)
+                        end.linkTo(ivPwdIcon.start, margin = 5.dp)
+                        width = Dimension.fillToConstraints
+                    }
+                    .background(color = colorResource(id = R.color.transparent))
+                    .wrapContentHeight(),
+                maxLines = 1,
+                textAlign = TextAlign.Start,
+            )
+        }
     }
 }
 
