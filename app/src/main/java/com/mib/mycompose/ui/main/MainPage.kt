@@ -103,6 +103,11 @@ fun MainPage(
 	LaunchedEffect(scrollState.value) {
 		savedScrollPosition.value = scrollState.value.toFloat()
 	}
+
+	SideEffect {
+		Logger.d(C.LINK_TAG,"main viewModel hashCode: ${mainPageViewModel.hashCode()}")
+	}
+
 	Logger.d("zym", "scrollState ${scrollState.value} ")
 
 	LaunchedEffect(Unit){

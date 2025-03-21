@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.jeremyliao.liveeventbus.LiveEventBus
@@ -47,6 +48,7 @@ import com.mib.mycompose.event.LogoutEvent
 import com.mib.mycompose.ext.toast
 import com.mib.mycompose.manager.UserInfoManager
 import com.mib.mycompose.model.LoginData
+import com.mib.mycompose.ui.main.MainPageViewModel
 import com.mib.mycompose.ui.theme.C_111111
 import com.mib.mycompose.ui.theme.C_222222
 import com.mib.mycompose.ui.theme.C_5AEA58
@@ -57,6 +59,7 @@ import com.mib.mycompose.ui.widget.MainBackHandler
 import com.mib.mycompose.ui.widget.NavScreen
 import com.mib.mycompose.ui.widget.SettingItem
 import com.mib.mycompose.util.Logger
+import com.mib.mycompose.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -67,6 +70,8 @@ import kotlinx.coroutines.launch
 @Preview
 @Composable
 fun MePage(modifier: Modifier = Modifier, navHostController: NavHostController = rememberNavController()) {
+	val viewModel: MainPageViewModel = viewModel()
+	Logger.d(C.LINK_TAG,"me viewModel hashCode: ${viewModel.hashCode()}")
 	var showDialog by remember { mutableStateOf(false) }
 	Logger.d(C.LINK_TAG,"MePage")
 	ConstraintLayout(

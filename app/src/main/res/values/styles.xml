@@ -1,0 +1,6 @@
+<resources>
+    <!-- Define a launch theme -->
+    <style name="LaunchTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@mipmap/bg_splash</item>
+    </style>
+</resources>

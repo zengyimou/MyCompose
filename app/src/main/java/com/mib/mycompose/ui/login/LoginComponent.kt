@@ -1,10 +1,10 @@
 package com.mib.mycompose.ui.login
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -12,14 +12,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -50,7 +46,6 @@ import com.mib.mycompose.ui.theme.loginTextStyle
 import com.mib.mycompose.ui.widget.BasicTextFieldWithHint
 import com.mib.mycompose.ui.widget.BasicTextFieldWithPassword
 import com.mib.mycompose.ui.widget.CircularProgressIndicator
-import com.mib.mycompose.ui.widget.CommonInputText
 import com.mib.mycompose.ui.widget.NavScreen
 import com.mib.mycompose.util.Logger
 import com.mib.mycompose.util.RouteUtils.navigateStart
@@ -70,75 +65,79 @@ import com.mib.mycompose.util.RouteUtils.navigateStart
  */
 @Preview
 @Composable
-fun LoginPage(navHostController: NavHostController? = null, loginViewModel: LoginViewModel = viewModel()) {
+fun LoginPage(
+    navHostController: NavHostController? = null,
+    loginViewModel: LoginViewModel = viewModel()
+) {
 
-	val context = LocalContext.current
-	val loginState = loginViewModel.loginLiveData.observeAsState()
-	val throwableState = loginViewModel.throwableLiveData.observeAsState()
+    val context = LocalContext.current
+    val loginState = loginViewModel.loginLiveData.observeAsState()
+    val throwableState = loginViewModel.throwableLiveData.observeAsState()
 
-	var btnClickState by remember { mutableStateOf(false) }
+    var btnClickState by remember { mutableStateOf(false) }
 
-	/** 输入框*/
-	var accountEditValue by remember { mutableStateOf("") }
-	var passwordEditValue by remember { mutableStateOf("") }
+    /** 输入框*/
+    var accountEditValue by remember { mutableStateOf("") }
+    var passwordEditValue by remember { mutableStateOf("") }
 
-	var showLoading by remember { mutableStateOf(false) }
-	//请求失败toast
-	LaunchedEffect(key1 = throwableState.value) {
-		showLoading = false
-		if (throwableState.value?.message?.isNotEmpty() == true) {
-			context.toast(throwableState.value?.message.toString())
-		}
-	}
+    var showLoading by remember { mutableStateOf(false) }
+    //请求失败toast
+    LaunchedEffect(key1 = throwableState.value) {
+        showLoading = false
+        if (throwableState.value?.message?.isNotEmpty() == true) {
+            context.toast(throwableState.value?.message.toString())
+        }
+    }
 
-	//登录成功跳转
-	LaunchedEffect(key1 = loginState.value) {
-		if (loginState.value == true) {
-			navHostController?.navigateStart(routeName = NavScreen.TabMain.route)
-		}
-	}
+    //登录成功跳转
+    LaunchedEffect(key1 = loginState.value) {
+        if (loginState.value == true) {
+            navHostController?.navigateStart(routeName = NavScreen.TabMain.route)
+        }
+    }
 
-	LaunchedEffect(key1 = btnClickState) {
-		if (btnClickState) {
-			showLoading = true
-			loginViewModel.login(account = "400002", password = "mib000")
-			btnClickState = false
-		}
-	}
+    LaunchedEffect(key1 = btnClickState) {
+        if (btnClickState) {
+            showLoading = true
+//			loginViewModel.login(account = "400002", password = "mib000")
+            loginViewModel.loginSuccess()
+            btnClickState = false
+        }
+    }
 
-	DisposableEffect(Unit) {
-		onDispose {
-			showLoading = false
-			Logger.d(LINK_TAG, "LoginComponent DisposableEffect!!!${loginViewModel.hashCode()}")
-		}
-	}
+    DisposableEffect(Unit) {
+        onDispose {
+            showLoading = false
+            Logger.d(LINK_TAG, "LoginComponent DisposableEffect!!!${loginViewModel.hashCode()}")
+        }
+    }
 
-	Box(
-		modifier = Modifier
+    Box(
+        modifier = Modifier
 			.fillMaxSize()
 			.background(colorResource(id = R.color.white))
-	) {
-		ConstraintLayout(
-			modifier = Modifier
+    ) {
+        ConstraintLayout(
+            modifier = Modifier
 				.absolutePadding(top = 40.dp, left = 16.dp, right = 16.dp)
 				.fillMaxWidth()
 				.height(IntrinsicSize.Min)
 				.background(colorResource(id = R.color.white)),
-		) {
+        ) {
 
-			val (
-				tvAccount,
-				etAccount,
-				tvPassword,
-				etPassword,
-				iconWelcome,
-				btnLogin,
-			) = createRefs()
-			/** welcome Icon*/
-			Image(
-				painter = painterResource(id = R.drawable.icon_welcome),
-				contentDescription = null,
-				modifier = Modifier
+            val (
+                tvAccount,
+                etAccount,
+                tvPassword,
+                etPassword,
+                iconWelcome,
+                btnLogin,
+            ) = createRefs()
+            /** welcome Icon*/
+            Image(
+                painter = painterResource(id = R.drawable.icon_welcome),
+                contentDescription = null,
+                modifier = Modifier
 					.constrainAs(iconWelcome) {
 						top.linkTo(parent.top)
 						start.linkTo(parent.start)
@@ -147,13 +146,13 @@ fun LoginPage(navHostController: NavHostController? = null, loginViewModel: Logi
 					.padding(16.dp)
 					.fillMaxWidth(0.7f)
 					.wrapContentHeight(),
-				contentScale = ContentScale.Fit
-			)
+                contentScale = ContentScale.Fit
+            )
 
 
-			Text(
-				text = "Account",
-				modifier = Modifier
+            Text(
+                text = "Account",
+                modifier = Modifier
 					.constrainAs(tvAccount) {
 						top.linkTo(iconWelcome.bottom)
 						start.linkTo(parent.start)
@@ -162,24 +161,23 @@ fun LoginPage(navHostController: NavHostController? = null, loginViewModel: Logi
 					.padding(top = 10.dp)
 					.fillMaxWidth()
 					.absolutePadding(top = 40.dp),
-				style = loginTextStyle,
-			)
+                style = loginTextStyle,
+            )
 
-			BasicTextFieldWithHint(
-				hint = "Enter Account",
-				onValueChange = { value ->
-					Logger.d("LoginContent", "onValueChange: $value")
-					accountEditValue = value
-				},
-				modifier = Modifier
+            BasicTextFieldWithHint(
+                hint = "Enter Account",
+                onValueChange = { value ->
+                    Logger.d("LoginContent", "onValueChange: $value")
+                    accountEditValue = value
+                },
+                modifier = Modifier
 					.constrainAs(etAccount) {
 						top.linkTo(tvAccount.bottom)
 						start.linkTo(tvAccount.start)
 						end.linkTo(parent.end)
 					}
-					.padding(top = 10.dp)
-				,
-			)
+					.padding(top = 10.dp),
+            )
 
 //			ConstraintLayout(
 //				modifier = Modifier
@@ -246,9 +244,9 @@ fun LoginPage(navHostController: NavHostController? = null, loginViewModel: Logi
 //				)
 //			}
 
-			Text(
-				text = "Password",
-				modifier = Modifier
+            Text(
+                text = "Password",
+                modifier = Modifier
 					.constrainAs(tvPassword) {
 						top.linkTo(etAccount.bottom)
 						start.linkTo(tvAccount.start)
@@ -256,17 +254,17 @@ fun LoginPage(navHostController: NavHostController? = null, loginViewModel: Logi
 					}
 					.padding(top = 6.dp)
 					.fillMaxWidth(),
-				style = loginTextStyle,
-				textAlign = TextAlign.Start
-			)
+                style = loginTextStyle,
+                textAlign = TextAlign.Start
+            )
 
-			BasicTextFieldWithPassword(
-				hint = "Enter Password",
-				onValueChange = { value ->
-					Logger.d("LoginContent", "onValueChange: $value")
-					passwordEditValue = value
-				},
-				modifier = Modifier
+            BasicTextFieldWithPassword(
+                hint = "Enter Password",
+                onValueChange = { value ->
+                    Logger.d("LoginContent", "onValueChange: $value")
+                    passwordEditValue = value
+                },
+                modifier = Modifier
 					.constrainAs(etPassword) {
 						top.linkTo(tvPassword.bottom)
 						start.linkTo(tvPassword.start)
@@ -274,20 +272,19 @@ fun LoginPage(navHostController: NavHostController? = null, loginViewModel: Logi
 						width = Dimension.fillToConstraints // 填充剩余宽度
 					}
 					.padding(top = 10.dp)
-					.wrapContentHeight()
-				,
-				isPassword = true
-			)
+					.wrapContentHeight(),
+                isPassword = true
+            )
 
 
 
 
-			Button(
-				onClick = {
-					// 处理按钮点击事件
-					btnClickState = true
-				},
-				modifier = Modifier
+            Button(
+                onClick = {
+                    // 处理按钮点击事件
+                    btnClickState = true
+                },
+                modifier = Modifier
 					.constrainAs(btnLogin) {
 						top.linkTo(etPassword.bottom)
 						start.linkTo(tvAccount.start)
@@ -296,22 +293,27 @@ fun LoginPage(navHostController: NavHostController? = null, loginViewModel: Logi
 					.padding(horizontal = 16.dp, vertical = 40.dp)
 					.fillMaxWidth()
 					.height(50.dp),
-				colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.colorPrimary)), // 设置按钮颜色
-				shape = RoundedCornerShape(8.dp) // 设置背景圆角
-			) {
-				// 按钮内容
-				Box(
-					modifier = Modifier
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.colorPrimary)), // 设置按钮颜色
+                shape = RoundedCornerShape(8.dp) // 设置背景圆角
+            ) {
+                // 按钮内容
+                Box(
+                    modifier = Modifier
 						.fillMaxWidth()
 						.fillMaxHeight()
 						.background(Color.Transparent),
-					contentAlignment = Alignment.Center
-				) {
-					Text(text = "Login", color = colorResource(id = R.color.white))
-				}
-			}
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "Login", color = colorResource(id = R.color.white))
+                }
+            }
 
-		}
-	}
-	CircularProgressIndicator(isShow = showLoading)
+        }
+    }
+    BackHandler(enabled = true) {
+        context?.let {
+            (it as Activity).finish()
+        }
+    }
+    CircularProgressIndicator(isShow = showLoading)
 }

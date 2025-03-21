@@ -7,14 +7,23 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -37,51 +46,64 @@ import kotlinx.coroutines.runBlocking
  *  description :
  */
 @SuppressLint("CustomSplashScreen")
-class SplashActivity: ComponentActivity() {
+class SplashActivity : ComponentActivity() {
 
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setContent {
-			splashContent()
-		}
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            splashContent()
+        }
 
-		delayChange()
-	}
+        delayChange()
+    }
 
-	@SuppressLint("ComposableNaming")
-	@Preview
-	@Composable
-	fun splashContent(){
-		Surface(color = colorResource(id = R.color.purple_200),  modifier = Modifier.fillMaxSize().padding(16.dp)) {
-			Image(
-				painter = painterResource(id = R.drawable.icon_welcome),
-				contentDescription = null,
-				modifier = Modifier.padding(16.dp),
-				contentScale = ContentScale.Fit
-			)
-		}
-	}
+    @SuppressLint("ComposableNaming")
+    @Preview
+    @Composable
+    fun splashContent() {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Image(
+                painter = painterResource(id = R.mipmap.bg_splash),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                contentScale = ContentScale.Crop
+            )
 
-	private fun delayChange() {
-		lifecycleScope.launch {
-			Logger.d(TAG, "delayChange")
-			delay(2500L)
-			enterApp()
-		}
-	}
+            Image(
+                painter = painterResource(id = R.drawable.icon_welcome),
+                contentDescription = null,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth(fraction = 1f)
+                    .padding(horizontal = 50.dp, vertical = 200.dp)
+                    .wrapContentHeight(),
+                contentScale = ContentScale.Inside
+            )
+        }
+    }
 
-	/**
-	 * 进应用
-	 */
-	private fun enterApp() {
-		Logger.d(TAG, "enterApp")
-		val intent = Intent()
-		intent.setClass(this, LoginActivity::class.java)
-		startActivity(intent)
-		finish()
-	}
+    private fun delayChange() {
+        lifecycleScope.launch {
+            Logger.d(TAG, "delayChange")
+            delay(2500L)
+            enterApp()
+        }
+    }
 
-	companion object{
-		const val TAG = "SplashActivity"
-	}
+    /**
+     * 进应用
+     */
+    private fun enterApp() {
+        Logger.d(TAG, "enterApp")
+        val intent = Intent()
+        intent.setClass(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    companion object {
+        const val TAG = "SplashActivity"
+    }
 }

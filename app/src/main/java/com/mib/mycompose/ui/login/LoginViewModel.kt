@@ -38,6 +38,10 @@ class LoginViewModel : BaseViewModel(){
 		)
 	}
 
+	fun loginSuccess(){
+		loginLiveData.value = true
+	}
+
 	private fun getUserInfo(loginData: LoginData) {
 		retrieveData({
 			RequestHolder.getEmployeeInfo()
