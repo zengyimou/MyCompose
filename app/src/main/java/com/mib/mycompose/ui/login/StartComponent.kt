@@ -35,7 +35,7 @@ fun StartComponent(navHostController: NavHostController = rememberNavController(
 	LaunchedEffect(Unit) {
 		if(UserInfoManager.isLogin){
 			Logger.d("zym", "nav NavScreen.TabMain.route")
-			navHostController.navigateStart(routeName = NavScreen.TabMain.route)
+			navHostController.navigateStart(routeName = NavScreen.BottomTab.route)
 		}else{
 			Logger.d("zym", "nav NavScreen.Login.route")
 			navHostController.navigateStart(routeName = NavScreen.Login.route)

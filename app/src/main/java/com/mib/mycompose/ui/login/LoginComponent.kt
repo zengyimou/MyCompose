@@ -92,7 +92,7 @@ fun LoginPage(
     //登录成功跳转
     LaunchedEffect(key1 = loginState.value) {
         if (loginState.value == true) {
-            navHostController?.navigateStart(routeName = NavScreen.TabMain.route)
+            navHostController?.navigateStart(routeName = NavScreen.BottomTab.route)
         }
     }
 

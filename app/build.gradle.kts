@@ -96,7 +96,7 @@ dependencies {
 	implementation("androidx.paging:paging-runtime-ktx:3.3.5")
 
 	implementation("com.google.accompanist:accompanist-systemuicontroller:0.36.0")
-	implementation("com.google.accompanist:accompanist-navigation-animation:0.28.0")
+	implementation("com.google.accompanist:accompanist-navigation-animation:0.34.0")
 
 	api("com.squareup.okhttp3:okhttp:4.10.0")
 	api("com.squareup.retrofit2:retrofit:2.9.0")

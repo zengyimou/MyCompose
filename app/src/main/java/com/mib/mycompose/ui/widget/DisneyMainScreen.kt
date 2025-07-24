@@ -1,72 +1,37 @@
 package com.mib.mycompose.ui.widget
 
-import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jeremyliao.liveeventbus.LiveEventBus
-import com.mib.mycompose.R
 import com.mib.mycompose.constants.C
 import com.mib.mycompose.constants.C.LINK_TAG
 import com.mib.mycompose.constants.Scene
 import com.mib.mycompose.constants.Scene.LOGIN_PAGE
+import com.mib.mycompose.constants.Scene.MAIN_TAB_PAGE
 import com.mib.mycompose.constants.Scene.START_PAGE
 import com.mib.mycompose.event.Event
 import com.mib.mycompose.event.LogoutEvent
-import com.mib.mycompose.ext.toast
 import com.mib.mycompose.manager.UserInfoManager
+import com.mib.mycompose.ui.BottomTagScreen
 import com.mib.mycompose.ui.case.CaseDetail
-import com.mib.mycompose.ui.case.CasePage
-import com.mib.mycompose.ui.contact.ContactPage
 import com.mib.mycompose.ui.login.LoginPage
 import com.mib.mycompose.ui.login.StartComponent
-import com.mib.mycompose.ui.main.MainPage
-import com.mib.mycompose.ui.me.MePage
-import com.mib.mycompose.ui.theme.C_30B284
 import com.mib.mycompose.ui.theme.C_Main
-import com.mib.mycompose.ui.theme.FF999999
-import com.mib.mycompose.ui.theme.White
 import com.mib.mycompose.util.Logger
 import com.mib.mycompose.viewmodel.MainViewModel
 import com.mib.mycompose.viewmodel.NavNavControllerViewModel
@@ -103,9 +68,9 @@ fun DisneyMainScreen(lifecycleOwner: LifecycleOwner, mainViewModel: MainViewMode
     SetEdgeToEdge(color = C_Main, darkIcons = true)
 
     Scaffold(
-        bottomBar = {
-            BottomBar(navController = navController, mainViewModel)
-        }
+//        bottomBar = {
+//            BottomBar(navController = navController, mainViewModel)
+//        }
     ) { innerPadding ->
         val colors = MaterialTheme.colors
 //        val systemUiController = rememberSystemUiController()
@@ -140,19 +105,23 @@ fun DisneyMainScreen(lifecycleOwner: LifecycleOwner, mainViewModel: MainViewMode
             composable(route = NavScreen.Login.route) {
                 LoginPage(navHostController = navController)
             }
-            //4个main tab
-            composable(route = NavScreen.TabMain.route) { key ->
-                MainPage(modifier = modifier, navHostController = navController)
+            composable(route = NavScreen.BottomTab.route) {
+                BottomTagScreen(navMainHostController = navController, mainViewModel = mainViewModel)
             }
-            composable(route = NavScreen.TabCase.route) {
-                CasePage(modifier = modifier, navHostController = navController)
-            }
-            composable(route = NavScreen.TabContact.route) {
-                ContactPage(modifier = modifier, navHostController = navController)
-            }
-            composable(route = NavScreen.TabMe.route) {
-                MePage(modifier = modifier, navHostController = navController)
-            }
+
+//            //4个main tab
+//            composable(route = NavScreen.TabMain.route) { key ->
+//                MainPage(modifier = modifier, navHostController = navController)
+//            }
+//            composable(route = NavScreen.TabCase.route) {
+//                CasePage(modifier = modifier, navHostController = navController)
+//            }
+//            composable(route = NavScreen.TabContact.route) {
+//                ContactPage(modifier = modifier, navHostController = navController)
+//            }
+//            composable(route = NavScreen.TabMe.route) {
+//                MePage(modifier = modifier, navHostController = navController)
+//            }
 
             //案件详情
             composable(
@@ -170,118 +139,12 @@ fun DisneyMainScreen(lifecycleOwner: LifecycleOwner, mainViewModel: MainViewMode
 
 }
 
-@SuppressLint("RestrictedApi")
-@Composable
-fun BottomBar(navController: NavController, mainViewModel: MainViewModel) {
-    //tab数组
-    val tabs = listOf(NavScreen.TabMain, NavScreen.TabCase, NavScreen.TabContact, NavScreen.TabMe)
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-
-    Logger.d(C.LINK_TAG, "BottomBar currentRoute ${currentRoute}")
-    val routes = remember { tabs.map { it.route } }
-
-    var selectItem by remember { mutableIntStateOf(0) }
-
-    /** 重新登陆需要重置selectItem选中第一个tab*/
-    val isResetSelectItem = mainViewModel.resetBottomBarSelectIndexLiveData.observeAsState()
-    if (isResetSelectItem.value == true) {
-        selectItem = 0
-        mainViewModel.resetBottomBarSelectIndex(enable = false)
-    }
-    val context = LocalContext.current
-    val tabItemsStr = listOf(
-        context.getString(R.string.tab_main),
-        context.getString(R.string.tab_case),
-        context.getString(R.string.tab_contact),
-        context.getString(R.string.tab_me)
-    )
-
-    val selectedIcon = listOf(
-        R.mipmap.icon_tab_btn_main_selected,
-        R.mipmap.icon_tab_btn_case_selected,
-        R.mipmap.icon_tab_btn_contact_selected,
-        R.mipmap.icon_tab_btn_me_selected
-    )
-
-    val unSelectIcon = listOf(
-        R.mipmap.icon_tab_btn_main_unselected,
-        R.mipmap.icon_tab_btn_case_unselected,
-        R.mipmap.icon_tab_btn_contact_unselected,
-        R.mipmap.icon_tab_btn_me_unselected
-    )
-
-    val tabTextColor = listOf(
-        C_30B284,
-        FF999999,
-    )
-    if (currentRoute in routes) {
-        Logger.d("zym", "BottomNavigation $currentRoute")
-        BottomNavigation(
-            backgroundColor = White,
-            modifier = Modifier
-                .height(64.dp)
-                .navigationBarsPadding()
-        ) {
-            tabs.forEachIndexed { index, item ->
-                Logger.d(C.LINK_TAG, "BottomNavigationItem ${item.route}")
-                BottomNavigationItem(
-                    icon = {
-                        val iconRes =
-                            if (selectItem == index) selectedIcon[index] else unSelectIcon[index]
-                        Box(
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Image(
-                                painter = painterResource(id = iconRes),
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop
-                            )
-                        }
-                    },
-                    label = {
-                        Text(
-                            text = tabItemsStr[index],
-                            textAlign = TextAlign.Center,
-                            fontSize = 10.sp,
-                            color = if (selectItem == index) tabTextColor[0] else tabTextColor[1]
-                        )
-                    },
-                    selected = selectItem == index,
-                    onClick = {
-                        selectItem = index
-                        val route = when (selectItem) {
-                            0 -> NavScreen.TabMain.route
-                            1 -> NavScreen.TabCase.route
-                            2 -> NavScreen.TabContact.route
-                            3 -> NavScreen.TabMe.route
-                            else -> NavScreen.TabMe.route
-                        }
-                        Logger.d(C.LINK_TAG, "onClick $index $route")
-                        navController.navigate(route) {
-                            val id = navController.graph.findStartDestination().id
-                            Logger.d(C.LINK_TAG, "id $id")
-                            popUpTo(id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                )
-            }
-        }
-        BackHandler(enabled = true) {
-            context.toast("当前为主页，不能返回")
-        }
-    }
-}
-
 sealed class NavScreen(val route: String) {
     object Start : NavScreen(START_PAGE)
 
 
     object Login : NavScreen(LOGIN_PAGE)
+    object BottomTab: NavScreen(MAIN_TAB_PAGE)
 
     object TabMain : NavScreen(Scene.TAG_MAIN_PAGE)
     object TabCase : NavScreen(Scene.TAG_CASE_PAGE)
