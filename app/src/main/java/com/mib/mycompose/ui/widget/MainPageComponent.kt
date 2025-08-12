@@ -170,7 +170,7 @@ fun InfoItem(
 ) {
 	ConstraintLayout(
 		modifier = modifier
-			.fillMaxWidth(100f)
+			.fillMaxWidth(1f)
 			.border(1.dp, color = if (isRankOne) C_FFFFEC9E else C_FFF1F1F1, shape = RoundedCornerShape(8.dp)),
 	) {
 		val (tvTitle, tvContent, ivCrown) = createRefs()

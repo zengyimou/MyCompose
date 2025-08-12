@@ -13,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.mib.mycompose.constants.C.LINK_TAG
 import com.mib.mycompose.ui.case.CasePage
 import com.mib.mycompose.ui.contact.ContactPage
@@ -47,21 +48,27 @@ fun BottomTagScreen(
 
         Logger.d(LINK_TAG, "=====================Scaffold Content")
         val modifier = Modifier.padding(innerPadding)
+
         NavHost(
             navController = navBottomTabController,
             startDestination = NavScreen.TabMain.route,
-            enterTransition = {
-                slideInHorizontally(
-                    initialOffsetX = { fullWidth -> fullWidth },
-                    animationSpec = tween(300)
-                )
-            },
-            exitTransition = {
-                slideOutHorizontally(
-                    targetOffsetX = { fullWidth -> -fullWidth },
-                    animationSpec = tween(300)
-                )
-            },
+//            enterTransition = {
+//                slideInHorizontally(
+//                    initialOffsetX = { fullWidth -> fullWidth },
+//                    animationSpec = tween(300)
+//                )
+//            },
+//            exitTransition = {
+//                slideOutHorizontally(
+//                    targetOffsetX = { fullWidth -> -fullWidth },
+//                    animationSpec = tween(300)
+//                )
+//            },
+
+            enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }) }, // 从右进
+            exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }) }, // 向左出
+            popEnterTransition = { slideInHorizontally(initialOffsetX = { -1000 }) }, // 从左进
+            popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }) } // 向右出
         ) {
 
             //4个main tab

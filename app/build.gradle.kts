@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
 	id("com.android.application")
 	id("org.jetbrains.kotlin.android")
+	id("com.google.devtools.ksp") version "1.8.10-1.0.9"
 }
 
 val properties: Properties = Properties()
@@ -114,4 +115,8 @@ dependencies {
 	androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 	debugImplementation("androidx.compose.ui:ui-tooling")
 	debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+	implementation("com.toggl:komposable-architecture:1.0.0-preview04")
+	testImplementation("com.toggl:komposable-architecture-test:1.0.0-preview04") // optional testing extensions
+	ksp("com.toggl:komposable-architecture-compiler:1.0.0-preview04")
 }

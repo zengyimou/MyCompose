@@ -9,6 +9,7 @@ import com.mib.mycompose.event.Event
 import com.mib.mycompose.event.LogoutEvent
 import com.mib.mycompose.ui.widget.DisneyMainScreen
 import com.mib.mycompose.ui.widget.NavScreen
+import com.mib.mycompose.util.ProvideSpacing
 import com.mib.mycompose.viewmodel.BaseViewModel
 import com.mib.mycompose.viewmodel.MainViewModel
 
@@ -28,7 +29,9 @@ class LoginActivity : BaseActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContent {
-			DisneyMainScreen(this, mainViewModel)
+			ProvideSpacing{
+				DisneyMainScreen(this, mainViewModel)
+			}
 		}
 	}
 
