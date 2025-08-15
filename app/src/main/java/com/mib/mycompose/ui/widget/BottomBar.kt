@@ -16,6 +16,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,16 +56,16 @@ fun BottomBar(navController: NavController, mainViewModel: MainViewModel) {
     Logger.d(C.LINK_TAG, "BottomBar currentRoute ${currentRoute}")
     val routes = remember { tabs.map { it.route } }
 
-    var selectItem by remember { mutableIntStateOf(0) }
+    var selectItem by rememberSaveable { mutableIntStateOf(0) }
 
     var lastBackPressTime by remember { mutableStateOf(0L) }
 
     /** 重新登陆需要重置selectItem选中第一个tab*/
-    val isResetSelectItem = mainViewModel.resetBottomBarSelectIndexLiveData.observeAsState()
-    if (isResetSelectItem.value == true) {
-        selectItem = 0
-        mainViewModel.resetBottomBarSelectIndex(enable = false)
-    }
+//    val isResetSelectItem = mainViewModel.resetBottomBarSelectIndexLiveData.observeAsState()
+//    if (isResetSelectItem.value == true) {
+//        selectItem = 0
+//        mainViewModel.resetBottomBarSelectIndex(enable = false)
+//    }
     val context = LocalContext.current
     val tabItemsStr = listOf(
         context.getString(R.string.tab_main),
