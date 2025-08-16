@@ -9,6 +9,8 @@ import com.mib.mycompose.event.Event
 import com.mib.mycompose.event.LogoutEvent
 import com.mib.mycompose.ui.widget.DisneyMainScreen
 import com.mib.mycompose.ui.widget.NavScreen
+import com.mib.mycompose.util.I18nProvider
+import com.mib.mycompose.util.I18nState
 import com.mib.mycompose.util.ProvideSpacing
 import com.mib.mycompose.viewmodel.BaseViewModel
 import com.mib.mycompose.viewmodel.MainViewModel
@@ -26,11 +28,19 @@ class LoginActivity : BaseActivity() {
 		return mainViewModel
 	}
 
+	private fun initDefaultLanguage() {
+		val tag = I18nState.getCurrentLanguage(this)
+		I18nState.setTag(tag = tag)
+	}
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
+		initDefaultLanguage()
 		setContent {
 			ProvideSpacing{
-				DisneyMainScreen(this, mainViewModel)
+				I18nProvider(I18nState.currentTag.value) {
+					DisneyMainScreen(this, mainViewModel)
+				}
 			}
 		}
 	}

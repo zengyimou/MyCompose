@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">MyCompose</string>
+    <string name="expired_token">expired token</string>
+
+    <string name="tab_main">主页</string>
+    <string name="tab_case">案件</string>
+    <string name="tab_contact">联系</string>
+    <string name="tab_me">我的</string>
+
+    <string name="main_collect_call_counting">通话数量</string>
+    <string name="main_collect_call_cases">通话案件</string>
+    <string name="main_collect_call_duration">通话时长</string>
+    <string name="main_collect_send_message">发送短信</string>
+    <string name="main_collect_onlinetime">在线时长</string>
+    <string name="main_collect_group_ranking">组别排名1</string>
+
+    <string name="task_title">案件详情</string>
+    <string name="change_language">切换语言</string>
+</resources>

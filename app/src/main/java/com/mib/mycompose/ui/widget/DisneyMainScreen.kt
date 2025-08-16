@@ -64,21 +64,9 @@ fun DisneyMainScreen(lifecycleOwner: LifecycleOwner, mainViewModel: MainViewMode
         Logger.d("NavStack", "Navigating to ${destination.route}")
     }
 
-//    SetStatusBarColor(color = C_Main, darkIcons = false)
     SetEdgeToEdge(color = C_Main, darkIcons = true)
 
-    Scaffold(
-//        bottomBar = {
-//            BottomBar(navController = navController, mainViewModel)
-//        }
-    ) { innerPadding ->
-        val colors = MaterialTheme.colors
-//        val systemUiController = rememberSystemUiController()
-//        var statusBarColor by remember { mutableStateOf(colors.primaryVariant) }
-//        var navigationBarColor by remember { mutableStateOf(colors.primaryVariant) }
-
-
-
+    Scaffold{ innerPadding ->
         Logger.d(LINK_TAG, "=====================Scaffold Content")
         val modifier = Modifier.padding(innerPadding)
         NavHost(

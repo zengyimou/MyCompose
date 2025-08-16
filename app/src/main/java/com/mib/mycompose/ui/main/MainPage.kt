@@ -72,6 +72,7 @@ import com.mib.mycompose.ui.widget.TabContentItem
 import com.mib.mycompose.ui.widget.TextWithEndIcon
 import com.mib.mycompose.ui.widget.statusBarPadding
 import com.mib.mycompose.util.AnimatedGoneView
+import com.mib.mycompose.util.I18nState
 import com.mib.mycompose.util.LocalAppSpacing
 import com.mib.mycompose.util.Logger
 import com.mib.mycompose.util.StatusBarUtils.statusBarHeightPx
@@ -246,6 +247,8 @@ fun MainPage(
                 .clickable {
                     context.toast("see more click")
                     isShowSipControl = !isShowSipControl
+                    //test切换多语言
+                    I18nState.changeI18(context)
                 }
                 .constrainAs(tvSeeMore) {
                     top.linkTo(tvPerformanceTitle.top)

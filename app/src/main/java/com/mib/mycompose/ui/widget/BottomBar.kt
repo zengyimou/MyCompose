@@ -35,6 +35,7 @@ import com.mib.mycompose.ext.toast
 import com.mib.mycompose.ui.theme.C_30B284
 import com.mib.mycompose.ui.theme.FF999999
 import com.mib.mycompose.ui.theme.White
+import com.mib.mycompose.util.LocalI18n
 import com.mib.mycompose.util.Logger
 import com.mib.mycompose.viewmodel.MainViewModel
 
@@ -66,12 +67,15 @@ fun BottomBar(navController: NavController, mainViewModel: MainViewModel) {
 //        selectItem = 0
 //        mainViewModel.resetBottomBarSelectIndex(enable = false)
 //    }
+
+    val i18n = LocalI18n.current
+
     val context = LocalContext.current
     val tabItemsStr = listOf(
-        context.getString(R.string.tab_main),
-        context.getString(R.string.tab_case),
-        context.getString(R.string.tab_contact),
-        context.getString(R.string.tab_me)
+        i18n.t(R.string.tab_main),
+        i18n.t(R.string.tab_case),
+        i18n.t(R.string.tab_contact),
+        i18n.t(R.string.tab_me)
     )
 
     val selectedIcon = listOf(

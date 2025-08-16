@@ -45,11 +45,15 @@ android {
 	}
 
 	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
+		sourceCompatibility = JavaVersion.VERSION_17
+		targetCompatibility = JavaVersion.VERSION_17
 	}
 	kotlinOptions {
-		jvmTarget = "1.8"
+		jvmTarget = "17"
+	}
+	// 使用 JVM Toolchain
+	kotlin {
+		jvmToolchain(17)
 	}
 	buildFeatures {
 		compose = true
@@ -67,6 +71,7 @@ android {
 
 dependencies {
 	implementation("androidx.compose.ui:ui-test-android:1.7.6")
+	implementation("androidx.appcompat:appcompat:1.7.1")
 	val composeVersion = "1.7.6"
 
 	implementation("androidx.core:core-ktx:1.9.0")
@@ -108,6 +113,7 @@ dependencies {
 	debugImplementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 	releaseImplementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 
+
 	testImplementation("junit:junit:4.13.2")
 	androidTestImplementation("androidx.test.ext:junit:1.1.5")
 	androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -116,7 +122,4 @@ dependencies {
 	debugImplementation("androidx.compose.ui:ui-tooling")
 	debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-	implementation("com.toggl:komposable-architecture:1.0.0-preview04")
-	testImplementation("com.toggl:komposable-architecture-test:1.0.0-preview04") // optional testing extensions
-	ksp("com.toggl:komposable-architecture-compiler:1.0.0-preview04")
 }
