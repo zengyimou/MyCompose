@@ -9,6 +9,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  *  author : cengyimou
@@ -17,16 +19,20 @@ import androidx.compose.ui.platform.LocalContext
  */
 object I18nState {
     val currentTag = mutableStateOf<String?>(null) // null 代表跟随系统
+    
     fun setTag(tag: String){
         currentTag.value = tag
     }
+    
     fun changeI18(context: Context){
-       currentTag.value = if (currentTag.value == "en") "es" else "en"
+        currentTag.value = if (currentTag.value == "en") "es" else "en"
         saveCurrentLanguage(context, currentTag.value)
     }
 
-    fun getCurrentLanguage(context: Context): String {
-        return SPUtils.getSharedStringData(context, LANGUAGE_KEY, DEFAULT_LANGUAGE_TAG)
+    suspend fun getCurrentLanguage(context: Context): String {
+        return withContext(Dispatchers.IO) {
+            SPUtils.getSharedStringData(context, LANGUAGE_KEY, DEFAULT_LANGUAGE_TAG)
+        }
     }
 
     fun saveCurrentLanguage(context: Context, languageTag: String?) {

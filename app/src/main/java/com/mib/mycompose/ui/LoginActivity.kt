@@ -3,6 +3,7 @@ package com.mib.mycompose.ui
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.lifecycle.viewModelScope
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.mib.mycompose.base.BaseActivity
 import com.mib.mycompose.event.Event
@@ -14,6 +15,7 @@ import com.mib.mycompose.util.I18nState
 import com.mib.mycompose.util.ProvideSpacing
 import com.mib.mycompose.viewmodel.BaseViewModel
 import com.mib.mycompose.viewmodel.MainViewModel
+import kotlinx.coroutines.launch
 
 /**
  *  author : cengyimou
@@ -29,8 +31,10 @@ class LoginActivity : BaseActivity() {
 	}
 
 	private fun initDefaultLanguage() {
-		val tag = I18nState.getCurrentLanguage(this)
-		I18nState.setTag(tag = tag)
+		mainViewModel.viewModelScope.launch {
+			val tag = I18nState.getCurrentLanguage(this@LoginActivity)
+			I18nState.setTag(tag = tag)
+		}
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
